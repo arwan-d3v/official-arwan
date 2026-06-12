@@ -34,3 +34,48 @@ CREATE TABLE services (
 
 -- Optional: Create index for faster username lookups (Dynamic Routing)
 CREATE INDEX idx_users_username ON users(username);
+
+-- Setup Row Level Security (RLS) for SaaS Backend
+-- Enable RLS on all tables
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE services ENABLE ROW LEVEL SECURITY;
+
+-- Users Table Policies
+-- Users can only read and update their own profile
+CREATE POLICY "Users can view own profile"
+ON users FOR SELECT
+USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile"
+ON users FOR UPDATE
+USING (auth.uid() = id);
+
+-- Projects Table Policies
+-- Users can manage their own projects
+CREATE POLICY "Users can view own projects"
+ON projects FOR SELECT
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own projects"
+ON projects FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own projects"
+ON projects FOR UPDATE
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own projects"
+ON projects FOR DELETE
+USING (auth.uid() = user_id);
+
+-- Published projects are visible to everyone
+CREATE POLICY "Published projects are visible to all"
+ON projects FOR SELECT
+USING (is_published = true);
+
+-- Services Table Policies
+-- Services are read-only for public/authenticated users (managed by admins only)
+CREATE POLICY "Services are viewable by everyone"
+ON services FOR SELECT
+USING (is_active = true);

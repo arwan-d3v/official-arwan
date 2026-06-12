@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Lock, Check } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 // List of all 27 themes matching globals.css
 const THEMES = [
@@ -56,11 +57,11 @@ const ThemeSelector = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-6 bg-background border border-secondary/20 rounded-xl shadow-lg relative">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Design Tokens Engine</h2>
-        <p className="text-foreground/60">Select from 27 meticulously crafted HSL color schemas.</p>
-      </div>
+    <Card className="w-full max-w-5xl mx-auto border-secondary/20 bg-background shadow-lg relative">
+      <CardHeader className="text-center">
+        <CardTitle className="text-3xl font-bold">Design Tokens Engine</CardTitle>
+        <CardDescription>Select from 27 meticulously crafted HSL color schemas.</CardDescription>
+      </CardHeader>
 
       {/* VIP Paywall Alert Mockup */}
       {showAlert && (
@@ -72,46 +73,48 @@ const ThemeSelector = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {THEMES.map((theme) => {
-          const isActive = activeTheme === theme.id;
-          return (
-            <button
-              key={theme.id}
-              onClick={() => handleThemeClick(theme)}
-              className={`
-                group relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-300
-                ${isActive ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'border-secondary/20 hover:border-primary/50 hover:bg-secondary/10'}
-                ${theme.isVip ? 'opacity-80 hover:opacity-100' : ''}
-              `}
-            >
-              {/* Theme Color Preview Circle */}
-              <div
-                className="w-12 h-12 rounded-full mb-3 shadow-inner border border-white/10 relative flex items-center justify-center"
-                style={{ backgroundColor: theme.color }}
+      <CardContent>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {THEMES.map((theme) => {
+            const isActive = activeTheme === theme.id;
+            return (
+              <button
+                key={theme.id}
+                onClick={() => handleThemeClick(theme)}
+                className={`
+                  group relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-300
+                  ${isActive ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'border-secondary/20 hover:border-primary/50 hover:bg-secondary/10'}
+                  ${theme.isVip ? 'opacity-80 hover:opacity-100' : ''}
+                `}
               >
-                {isActive && !theme.isVip && <Check size={20} className="text-white drop-shadow-md" />}
-                {theme.isVip && (
-                  <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center backdrop-blur-[1px]">
-                    <Lock size={18} className="text-white/80" />
-                  </div>
-                )}
-              </div>
+                {/* Theme Color Preview Circle */}
+                <div
+                  className="w-12 h-12 rounded-full mb-3 shadow-inner border border-white/10 relative flex items-center justify-center"
+                  style={{ backgroundColor: theme.color }}
+                >
+                  {isActive && !theme.isVip && <Check size={20} className="text-white drop-shadow-md" />}
+                  {theme.isVip && (
+                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center backdrop-blur-[1px]">
+                      <Lock size={18} className="text-white/80" />
+                    </div>
+                  )}
+                </div>
 
-              <span className={`text-sm font-medium ${isActive ? 'text-primary' : 'text-foreground/80'}`}>
-                {theme.name}
-              </span>
-
-              {theme.isVip && (
-                <span className="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-1.5 py-0.5 rounded">
-                  VIP
+                <span className={`text-sm font-medium ${isActive ? 'text-primary' : 'text-foreground/80'}`}>
+                  {theme.name}
                 </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
+
+                {theme.isVip && (
+                  <span className="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-1.5 py-0.5 rounded">
+                    VIP
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

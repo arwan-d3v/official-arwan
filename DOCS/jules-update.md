@@ -9,3 +9,11 @@
 - Created Routing Architecture: Home Page, Dashboard Layout (Admin Theme Locked), and Dynamic User Route.
 - Initialized Supabase SQL schema in supabase/schema.sql.
 - Implemented strict Firebase Telemetry stubs in src/lib/firebase.ts.
+- Initialized Shadcn UI with Tailwind CSS v4.
+- Added Shadcn components: card, dropdown-menu, switch.
+- Integrated Shadcn Card component into ThemeSelector.tsx.
+- Configured Supabase SSR authentication.
+- Implemented strict Row Level Security (RLS) policies in supabase/schema.sql.
+- Installed @aws-sdk/client-s3 and configured Cloudflare R2 connection in src/lib/r2.ts.
+- Created Vercel Edge Middleware in src/middleware.ts for Supabase Auth and Hybrid Subdomain Routing.
+- Updated DESIGN.md with Enterprise Tech Stack Matrix.

@@ -74,3 +74,25 @@ This document serves as the Single Source of Truth for the project's color archi
   - `Pricing Funnel`
   - `ThemeSelector.tsx` (27 Theme Grid with VIP Lock)
   - `GlobalFooter.tsx` (Glassmorphism, Social Nodes, Status)
+
+## Enterprise Tech Stack Matrix
+
+### Frontend & UI
+- **Framework:** Next.js 15 (React 19)
+- **Styling:** Tailwind CSS v4 + Shadcn UI (Custom HSL Architecture)
+- **Rendering:** SSR/ISR for low-latency SaaS portfolios
+
+### Hybrid Database Architecture
+- **SaaS Backend:** Supabase (PostgreSQL)
+  - Used for User Auth, Services, Projects, and billing logic.
+  - Secued by strict Row Level Security (RLS) policies.
+  - Session handled via `@supabase/ssr` cookies.
+- **Live Telemetry:** Firebase Real-time DB
+  - Strict instance naming convention: `db`
+  - Purpose: Pure high-speed EA payload ingestion from MT5 nodes.
+
+### Infrastructure
+- **Media Storage:** Cloudflare R2 via AWS SDK (`@aws-sdk/client-s3`).
+  - Zero egress fees for user profile and portfolio asset delivery.
+- **Routing & Interception:** Vercel Edge Middleware.
+  - Hybrid URL interception distinguishing main domain (owner SaaS landing) vs tenant subdomains (`[username].kiroix.com`).

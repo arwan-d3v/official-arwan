@@ -81,17 +81,3 @@ body {
     text-wrap: balance;
   }
 }
-
-/* Shadcn additions for UI components */
-@layer base {
-  :root {
-    --radius: 0.5rem;
-    --border: var(--secondary);
-    --input: var(--secondary);
-    --ring: var(--primary);
-  }
-
-  * {
-    @apply border-[var(--border)];
-  }
-}
