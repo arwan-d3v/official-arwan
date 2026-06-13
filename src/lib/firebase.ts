@@ -13,13 +13,23 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Initialize Firebase gracefully to prevent build errors on Vercel
+let app;
+let db: any;
 
-// CRITICAL: Database instance variable naming convention MUST be strictly `db`
-// to ensure consistency across the KiroiX telemetry pipeline.
-// Do NOT use alias `database` or other names.
-const db = getDatabase(app);
+try {
+  if (firebaseConfig.projectId && firebaseConfig.databaseURL) {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    db = getDatabase(app);
+  } else {
+    console.warn("Firebase config missing projectId or databaseURL. Using mock app for build.");
+    // Mock for build time
+    app = !getApps().length ? initializeApp({ projectId: "mock-project", databaseURL: "https://mock.firebaseio.com" }) : getApp();
+    db = getDatabase(app);
+  }
+} catch (error) {
+  console.error("Firebase init error during build:", error);
+}
 
 // Use emulator for offline debugging in development
 if (process.env.NODE_ENV === 'development') {
