@@ -85,7 +85,7 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      setError(error.message);
+      setError({ title: "Google Login Failed", message: error.message });
       setGoogleLoading(false);
     }
   };

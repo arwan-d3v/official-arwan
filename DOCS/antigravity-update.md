@@ -34,3 +34,6 @@
 
 ## [2026-06-13] Exclusive Tech Themes & UI Contrast Update (CP)
 - [16:11:00 +08:00] [CP] Memisahkan tema publik dengan *Dashboard Editor Theme*. Mengimplementasikan 2 tema eksklusif khusus Dashboard: **Nvidia (Light Mode)** dan **Neon Cyan AMD/MSI (Dark Mode, tanpa aksen merah)**. Preferensi tema *user* akan disimpan di database Supabase (kolom `dashboard_theme`). Menambahkan efek elevasi/bayangan untuk mempertajam kontras antara *Sidebar* dan *Navbar* (termasuk aksen garis *Primary* ala Nvidia di *Navbar* atas).
+
+## [2026-06-13] TypeScript Build & Existing Code Fix (CP)
+- [16:17:00 +08:00] [CP] Memperbaiki *TypeScript type error* pada halaman register (`setError` mismatch) serta mengecualikan folder `existing-code/` pada konfigurasi `tsconfig.json` untuk mencegah Next.js melakukan kompilasi file lawas saat proses *production build*. *Build* kini berhasil tanpa *error*.
