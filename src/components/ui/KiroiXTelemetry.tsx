@@ -1,9 +1,80 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Activity, Server, TrendingUp, AlertCircle, Wifi } from 'lucide-react';
+import { listenToKiroixTelemetry } from '@/lib/firebase';
+
+interface TelemetryData {
+  status: string;
+  latency: number;
+  lastTick: number;
+  trend: {
+    symbol: string;
+    action: 'BUY' | 'SELL';
+    timeframe: string;
+    price: number | null;
+    condition: string;
+  };
+}
 
 const KiroiXTelemetry = () => {
+  const [telemetry, setTelemetry] = useState<TelemetryData>({
+    status: 'Active',
+    latency: 24,
+    lastTick: Date.now() - 12000,
+    trend: {
+      symbol: 'EURUSD',
+      action: 'BUY',
+      timeframe: 'M1',
+      price: null,
+      condition: 'Bullish'
+    }
+  });
+
+  const [timeAgo, setTimeAgo] = useState('12s ago');
+  const [pingHistory, setPingHistory] = useState<number[]>([4, 6, 5, 8, 4, 3, 5, 4, 7, 5, 4]);
+
+  useEffect(() => {
+    // Subscribe to Firebase real-time telemetry updates
+    const unsubscribe = listenToKiroixTelemetry((data) => {
+      if (data) {
+        const telemetryData = data as TelemetryData;
+        setTelemetry(telemetryData);
+        
+        // Dynamically add new latency ping to history chart
+        setPingHistory((prev) => {
+          const nextHistory = [...prev.slice(1), Math.min(Math.max(Math.floor(telemetryData.latency / 4), 2), 10)];
+          return nextHistory;
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateTimeAgo = () => {
+      const elapsedMs = Date.now() - telemetry.lastTick;
+      if (elapsedMs < 1000) {
+        setTimeAgo('just now');
+      } else {
+        const seconds = Math.floor(elapsedMs / 1000);
+        if (seconds < 60) {
+          setTimeAgo(`${seconds}s ago`);
+        } else {
+          const minutes = Math.floor(seconds / 60);
+          setTimeAgo(`${minutes}m ago`);
+        }
+      }
+    };
+
+    updateTimeAgo();
+    const interval = setInterval(updateTimeAgo, 1000);
+    return () => clearInterval(interval);
+  }, [telemetry.lastTick]);
+
   return (
     <div className="w-full max-w-4xl mx-auto bg-background border border-secondary/30 rounded-2xl overflow-hidden shadow-2xl relative">
       {/* Header / Top Bar */}
@@ -34,10 +105,10 @@ const KiroiXTelemetry = () => {
             <Server size={16} />
             <span className="text-sm font-medium">AI Agent Status</span>
           </div>
-          <div className="text-3xl font-bold text-foreground mt-1">Active</div>
-          <div className="mt-4 text-xs text-foreground/50 flex items-center gap-1">
+          <div className="text-3xl font-bold text-foreground mt-1">{telemetry.status}</div>
+          <div className="mt-4 text-xs text-foreground/50 flex items-center gap-1 font-mono">
             <AlertCircle size={12} />
-            Last tick: 12ms ago
+            Last tick: {timeAgo}
           </div>
         </div>
 
@@ -48,12 +119,12 @@ const KiroiXTelemetry = () => {
             <span className="text-sm font-medium">Broker Latency</span>
           </div>
           <div className="text-3xl font-bold text-foreground flex items-baseline gap-1 mt-1">
-            24 <span className="text-sm font-normal text-foreground/50">ms</span>
+            {telemetry.latency} <span className="text-sm font-normal text-foreground/50">ms</span>
           </div>
           {/* Mock Ping Chart Line */}
           <div className="mt-4 flex items-end gap-1 h-8 opacity-70">
-            {[4, 6, 5, 8, 4, 3, 5, 4, 7, 5, 4].map((h, i) => (
-              <div key={i} className="w-full bg-primary/40 rounded-t-sm" style={{ height: `${h * 10}%` }}></div>
+            {pingHistory.map((h, i) => (
+              <div key={i} className="w-full bg-primary/40 rounded-t-sm transition-all duration-300" style={{ height: `${h * 10}%` }}></div>
             ))}
           </div>
         </div>
@@ -68,13 +139,19 @@ const KiroiXTelemetry = () => {
           <div className="mt-2 p-3 bg-primary/10 rounded-lg border border-primary/20">
             <div className="text-xs text-foreground/70 mb-1">Current Reading</div>
             <div className="text-lg font-bold text-primary flex items-center gap-2">
-              EMA 200 (M1)
-              <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-500 text-xs rounded uppercase tracking-wider">Bullish</span>
+              {telemetry.trend.symbol} ({telemetry.trend.timeframe})
+              <span className={`px-2 py-0.5 text-xs rounded uppercase tracking-wider font-semibold ${
+                telemetry.trend.action === 'BUY' 
+                  ? 'bg-emerald-500/20 text-emerald-500' 
+                  : 'bg-rose-500/20 text-rose-500'
+              }`}>
+                {telemetry.trend.condition}
+              </span>
             </div>
           </div>
 
           <div className="mt-3 text-xs text-foreground/60">
-            Condition: Price {'>'} EMA
+            Condition: Price {telemetry.trend.action === 'BUY' ? '>' : '<'} EMA
           </div>
         </div>
 

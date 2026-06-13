@@ -2,8 +2,17 @@ import MegaMenu from '@/components/ui/MegaMenu';
 import KiroiXTelemetry from '@/components/ui/KiroiXTelemetry';
 import ThemeSelector from '@/components/ui/ThemeSelector';
 import GlobalFooter from '@/components/ui/GlobalFooter';
+import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: services } = await supabase
+    .from('services')
+    .select('*')
+    .eq('is_active', true)
+    .order('price_monthly', { ascending: true });
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-500">
       <MegaMenu />
@@ -18,25 +27,38 @@ export default function Home() {
             Live Portfolio & High-Performance Trading Infrastructure. Architected for speed, reliability, and unparalleled design.
           </p>
           <div className="flex justify-center gap-4">
-            <button className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">
+            <Link href="#services" className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">
               Explore Services
-            </button>
-            <button className="px-8 py-3 rounded-full bg-secondary text-foreground font-bold hover:bg-secondary/80 transition-colors">
-              View Documentation
-            </button>
+            </Link>
+            <Link href="/dashboard" className="px-8 py-3 rounded-full bg-secondary text-foreground font-bold hover:bg-secondary/80 transition-colors">
+              Go to Dashboard
+            </Link>
           </div>
         </section>
 
-        {/* Project Grid Mockup */}
-        <section className="px-4 max-w-7xl mx-auto w-full">
-          <h2 className="text-3xl font-bold mb-8 text-center">Ecosystem Projects</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-64 rounded-2xl bg-secondary/20 border border-secondary/30 flex items-center justify-center p-6 text-center hover:border-primary/50 transition-colors">
-                <span className="text-foreground/50 font-medium">Project Module {i}</span>
-              </div>
-            ))}
-          </div>
+        {/* Dynamic Services Grid */}
+        <section id="services" className="px-4 max-w-7xl mx-auto w-full scroll-mt-24">
+          <h2 className="text-3xl font-bold mb-8 text-center">Active Services</h2>
+          {services && services.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service) => (
+                <div key={service.id} className="rounded-2xl bg-secondary/10 border border-secondary/20 p-8 hover:border-primary/50 transition-colors flex flex-col">
+                  <h3 className="text-2xl font-bold mb-2">{service.name}</h3>
+                  <div className="text-3xl font-extrabold text-primary mb-4">
+                    ${service.price_monthly}<span className="text-sm text-foreground/50 font-normal">/mo</span>
+                  </div>
+                  <p className="text-foreground/70 mb-8 flex-grow">{service.description}</p>
+                  <button className="w-full py-3 rounded-xl bg-primary/20 text-primary font-bold hover:bg-primary hover:text-primary-foreground transition-colors">
+                    Subscribe Now
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 border border-dashed border-secondary/30 rounded-2xl bg-secondary/5">
+              <p className="text-foreground/50">No active services available at the moment.</p>
+            </div>
+          )}
         </section>
 
         {/* KiroiX Telemetry Widget */}

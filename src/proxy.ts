@@ -51,10 +51,18 @@ export async function proxy(request: NextRequest) {
 
   // 2. Subdomain Routing Logic (Tenant Architecture)
   // Example: user.kiroix.com -> Rewrite to /[username]
-  const isLocalhost = hostname.includes('localhost');
+  // Example: user.localhost:3000 -> Rewrite to /[username]
+  const hostWithoutPort = hostname.split(':')[0];
+  const isLocalhost = hostWithoutPort.endsWith('localhost');
   const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'kiroix.com';
 
-  if (!isLocalhost && hostname !== rootDomain && hostname.endsWith(`.${rootDomain}`)) {
+  if (isLocalhost) {
+    if (hostWithoutPort !== 'localhost') {
+      const subdomain = hostWithoutPort.substring(0, hostWithoutPort.indexOf('.localhost'));
+      // Rewrite the request to our dynamic route
+      return NextResponse.rewrite(new URL(`/${subdomain}${url.pathname}`, request.url));
+    }
+  } else if (hostname !== rootDomain && hostname.endsWith(`.${rootDomain}`)) {
     const subdomain = hostname.replace(`.${rootDomain}`, '');
     // Rewrite the request to our dynamic route
     return NextResponse.rewrite(new URL(`/${subdomain}${url.pathname}`, request.url));

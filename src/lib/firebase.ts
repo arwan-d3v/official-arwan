@@ -21,6 +21,12 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 // Do NOT use alias `database` or other names.
 const db = getDatabase(app);
 
+// Use emulator for offline debugging in development
+if (process.env.NODE_ENV === 'development') {
+  const { connectDatabaseEmulator } = require('firebase/database');
+  connectDatabaseEmulator(db, '127.0.0.1', 9000);
+}
+
 /**
  * Stub function to listen to KiroiX Telemetry payloads via Firebase Real-time Database
  * @param callback - Function to handle incoming EA payload

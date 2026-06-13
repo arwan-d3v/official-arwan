@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Lock, Check } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { createClient } from '@/lib/supabase/client';
 
 // List of all 27 themes matching globals.css
 const THEMES = [
@@ -39,10 +40,46 @@ const THEMES = [
 
 const ThemeSelector = () => {
   const [activeTheme, setActiveTheme] = useState('dark-neon');
+  const [isVip, setIsVip] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState('VIP Paywall: Upgrade to unlock premium themes!');
+  const supabase = createClient();
 
-  const handleThemeClick = (theme: typeof THEMES[0]) => {
-    if (theme.isVip) {
+  useEffect(() => {
+    async function fetchUserTheme() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        // Fetch user profile from public.users table
+        const { data: profile } = await supabase
+          .from('users')
+          .select('is_vip, active_theme')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setIsVip(profile.is_vip || false);
+          if (profile.active_theme) {
+            setActiveTheme(profile.active_theme);
+            if (profile.active_theme === 'light') {
+              document.documentElement.removeAttribute('data-theme');
+            } else {
+              document.documentElement.setAttribute('data-theme', profile.active_theme);
+            }
+          }
+        }
+      }
+    }
+    fetchUserTheme();
+  }, [supabase]);
+
+  const handleThemeClick = async (theme: typeof THEMES[0]) => {
+    if (theme.isVip && !isVip) {
+      setAlertMsg(!userId 
+        ? 'Please login to unlock VIP themes!' 
+        : 'VIP Paywall: Upgrade to unlock premium themes!'
+      );
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
       return;
@@ -53,6 +90,14 @@ const ThemeSelector = () => {
       document.documentElement.removeAttribute('data-theme');
     } else {
       document.documentElement.setAttribute('data-theme', theme.id);
+    }
+
+    // Save preference to Supabase if logged in
+    if (userId) {
+      await supabase
+        .from('users')
+        .update({ active_theme: theme.id })
+        .eq('id', userId);
     }
   };
 
@@ -68,7 +113,7 @@ const ThemeSelector = () => {
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground px-6 py-3 rounded-full shadow-xl flex items-center gap-2 font-medium border border-primary-foreground/20">
             <Lock size={18} />
-            VIP Paywall: Upgrade to unlock premium themes!
+            {alertMsg}
           </div>
         </div>
       )}
@@ -92,8 +137,8 @@ const ThemeSelector = () => {
                   className="w-12 h-12 rounded-full mb-3 shadow-inner border border-white/10 relative flex items-center justify-center"
                   style={{ backgroundColor: theme.color }}
                 >
-                  {isActive && !theme.isVip && <Check size={20} className="text-white drop-shadow-md" />}
-                  {theme.isVip && (
+                  {isActive && (!theme.isVip || isVip) && <Check size={20} className="text-white drop-shadow-md" />}
+                  {theme.isVip && !isVip && (
                     <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center backdrop-blur-[1px]">
                       <Lock size={18} className="text-white/80" />
                     </div>

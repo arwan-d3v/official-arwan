@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import MegaMenu from '@/components/ui/MegaMenu';
+import Link from 'next/link';
 
 export default function DashboardLayout({
   children,
@@ -32,10 +33,10 @@ export default function DashboardLayout({
         {/* Mock Admin Sidebar */}
         <aside className="w-64 hidden md:block border-r border-secondary/20 bg-secondary/5 p-6">
           <div className="text-xs font-bold text-foreground/50 uppercase tracking-wider mb-4">Admin Panel</div>
-          <nav className="space-y-2">
-            <a href="#" className="block px-3 py-2 rounded bg-primary/10 text-primary font-medium">Overview</a>
-            <a href="#" className="block px-3 py-2 rounded hover:bg-secondary/20 text-foreground/80">Users</a>
-            <a href="#" className="block px-3 py-2 rounded hover:bg-secondary/20 text-foreground/80">Telemetry Settings</a>
+          <nav className="space-y-2 flex flex-col">
+            <Link href="/dashboard" className="block px-3 py-2 rounded hover:bg-secondary/20 text-foreground/80">Overview</Link>
+            <Link href="/dashboard/portfolio" className="block px-3 py-2 rounded border border-neon-cyan/20 bg-black/40 text-neon-cyan hover:bg-neon-cyan/10 font-medium font-mono">Portfolio Builder</Link>
+            <Link href="/dashboard/services" className="block px-3 py-2 rounded border border-red-500/20 bg-black/40 text-red-500 hover:bg-red-500/10 font-medium font-mono">Services Manager</Link>
           </nav>
         </aside>
 
