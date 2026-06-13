@@ -38,6 +38,7 @@ export async function proxy(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = request.headers.get('host') || '';
   const isDashboard = url.pathname.startsWith('/dashboard');
+  const isAdminRoute = url.pathname.startsWith('/dashboard/admin') || url.pathname.startsWith('/dashboard/services');
 
   // Logic Intersepsi: Hybrid Architecture (Owner vs Tenant)
   // For production, you might compare hostname against process.env.NEXT_PUBLIC_ROOT_DOMAIN
@@ -45,8 +46,21 @@ export async function proxy(request: NextRequest) {
   // 1. Dashboard Protection
   if (isDashboard && !user) {
     // If trying to access dashboard without auth, redirect to login
-    // Note: Assuming a /login route exists in a full implementation
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // 1b. Admin Route Protection (RBAC)
+  if (isAdminRoute && user) {
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+      
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'superadmin')) {
+      // Redirect unauthorized users to the safe dashboard area
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   // 2. Subdomain Routing Logic (Tenant Architecture)

@@ -39,7 +39,7 @@ const THEMES = [
 ];
 
 const ThemeSelector = () => {
-  const [activeTheme, setActiveTheme] = useState('dark-neon');
+  const [activeTheme, setActiveTheme] = useState('minimalist');
   const [isVip, setIsVip] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState(false);

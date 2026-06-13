@@ -28,3 +28,9 @@
 
 ## [2026-06-13] Git Repository Update & Vercel Prep (CP)
 - [08:45:00 +08:00] [CP] Menambahkan `existing-code/` ke dalam `.gitignore`, melakukan `git commit` untuk seluruh perubahan fitur Portfolio Builder dan Services, serta menyiapkan file *environment* untuk kebutuhan *deployment* ke Vercel.
+
+## [2026-06-13] Vercel Build Fix (CP)
+- [08:48:00 +08:00] [CP] Memperbaiki *fatal error* Firebase (`Can't determine Firebase Database URL`) saat proses *build* di Vercel dengan mengimplementasikan *graceful fallback initialization* (memberikan nilai *mock* ke `initializeApp` jika variabel *environment* kosong saat kompilasi). Kode telah di-*push* kembali ke *repository*.
+
+## [2026-06-13] Exclusive Tech Themes & UI Contrast Update (CP)
+- [16:11:00 +08:00] [CP] Memisahkan tema publik dengan *Dashboard Editor Theme*. Mengimplementasikan 2 tema eksklusif khusus Dashboard: **Nvidia (Light Mode)** dan **Neon Cyan AMD/MSI (Dark Mode, tanpa aksen merah)**. Preferensi tema *user* akan disimpan di database Supabase (kolom `dashboard_theme`). Menambahkan efek elevasi/bayangan untuk mempertajam kontras antara *Sidebar* dan *Navbar* (termasuk aksen garis *Primary* ala Nvidia di *Navbar* atas).

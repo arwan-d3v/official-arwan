@@ -57,7 +57,7 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
   // Fetch GitHub Stats
   const githubStats = await getGitHubStats(username);
 
-  const activeTheme = userProfile.active_theme || 'dark-neon';
+  const activeTheme = userProfile.active_theme || 'minimalist';
 
   return (
     <div 

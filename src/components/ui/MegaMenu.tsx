@@ -3,34 +3,57 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, Sun, Moon, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from "@/lib/supabase/client";
 
 const MegaMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAdminDark, setIsAdminDark] = useState(false);
+  const [adminTheme, setAdminTheme] = useState<"nvidia" | "cyan">("nvidia");
+  const [isDashboard, setIsDashboard] = useState(false);
+  const supabase = createClient();
 
-  const toggleAdminTheme = () => {
-    const newDarkState = !isAdminDark;
-    setIsAdminDark(newDarkState);
+  useEffect(() => {
+    // Check path on mount
+    setIsDashboard(window.location.pathname.includes('/dashboard'));
 
-    // Check if we are in admin mode globally
-    const path = window.location.pathname;
-    if (path.includes('/dashboard')) {
-       document.documentElement.setAttribute('data-admin-theme', newDarkState ? 'dark' : 'light');
+    async function loadTheme() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from("users")
+          .select("dashboard_theme")
+          .eq("id", user.id)
+          .single();
+        
+        if (data?.dashboard_theme === "cyan" || data?.dashboard_theme === "nvidia") {
+          setAdminTheme(data.dashboard_theme);
+          if (window.location.pathname.includes('/dashboard')) {
+            document.documentElement.setAttribute('data-admin-theme', data.dashboard_theme);
+          }
+        }
+      }
+    }
+    loadTheme();
+  }, [supabase]);
+
+  const toggleAdminTheme = async () => {
+    const newTheme = adminTheme === "nvidia" ? "cyan" : "nvidia";
+    setAdminTheme(newTheme);
+
+    if (isDashboard) {
+       document.documentElement.setAttribute('data-admin-theme', newTheme);
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase
+        .from("users")
+        .update({ dashboard_theme: newTheme })
+        .eq("id", user.id);
     }
   };
 
-  useEffect(() => {
-    // Keep DOM state synced with react state on hydration
-    const path = window.location.pathname;
-    if (path.includes('/dashboard')) {
-      document.documentElement.setAttribute('data-admin-theme', isAdminDark ? 'dark' : 'light');
-    } else {
-      document.documentElement.removeAttribute('data-admin-theme');
-    }
-  }, [isAdminDark]);
-
   return (
-    <nav className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-secondary/20">
+    <nav className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/90 border-b border-secondary/30 border-t-[3px] border-t-primary shadow-sm transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo / Brand */}
@@ -62,7 +85,7 @@ const MegaMenu = () => {
               className="p-2 rounded-full bg-secondary/30 text-foreground hover:bg-secondary/50 transition-colors flex items-center justify-center border border-secondary/50"
               title="Toggle Admin Theme (Nvidia Light / AMD Dark)"
             >
-              {isAdminDark ? <Moon size={18} className="text-cyan-400" /> : <Sun size={18} className="text-amber-500" />}
+              {adminTheme === "cyan" ? <Moon size={18} className="text-cyan-400" /> : <Sun size={18} className="text-amber-500" />}
             </button>
 
             <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:opacity-90 transition-opacity">
@@ -93,7 +116,7 @@ const MegaMenu = () => {
             <div className="px-3 py-2 flex items-center justify-between">
               <span className="text-base font-medium text-foreground/80">Admin Theme</span>
               <button onClick={toggleAdminTheme} className="p-2 rounded-full bg-secondary/30">
-                {isAdminDark ? <Moon size={18} className="text-cyan-400" /> : <Sun size={18} className="text-amber-500" />}
+              {adminTheme === "cyan" ? <Moon size={18} className="text-cyan-400" /> : <Sun size={18} className="text-amber-500" />}
               </button>
             </div>
           </div>

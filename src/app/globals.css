@@ -4,6 +4,7 @@
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
   --color-secondary: hsl(var(--secondary));
   --color-accent: hsl(var(--accent));
 }
@@ -13,6 +14,7 @@
   --background: 0 0% 100%;
   --foreground: 0 0% 10%;
   --primary: 0 0% 20%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 0 0% 90%;
   --accent: 0 0% 50%;
 }
@@ -22,6 +24,7 @@
   --background: 240 10% 4%;
   --foreground: 0 0% 98%;
   --primary: 260 100% 60%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 240 20% 15%;
   --accent: 320 100% 60%;
 }
@@ -55,20 +58,22 @@
 
 
 /* Admin Themes */
-[data-admin-theme="light"] {
+[data-admin-theme="nvidia"] {
   --background: 0 0% 98%;
-  --foreground: 0 0% 15%;
-  --primary: 120 100% 35%;
-  --secondary: 0 0% 90%;
-  --accent: 120 50% 50%;
+  --foreground: 0 0% 10%;
+  --primary: 120 100% 35%; /* Nvidia Green */
+  --primary-foreground: 0 0% 98%; /* White text on dark green */
+  --secondary: 0 0% 85%;
+  --accent: 120 50% 45%;
 }
 
-[data-admin-theme="dark"] {
-  --background: 0 0% 5%;
+[data-admin-theme="cyan"] {
+  --background: 240 5% 6%; /* Deep dark */
   --foreground: 0 0% 95%;
-  --primary: 180 100% 50%;
-  --secondary: 0 100% 50%;
-  --accent: 0 80% 40%;
+  --primary: 180 100% 50%; /* Neon Cyan */
+  --primary-foreground: 240 10% 4%; /* Black text on neon cyan */
+  --secondary: 200 20% 20%; /* Dark greyish blue */
+  --accent: 180 60% 40%;
 }
 
 body {
