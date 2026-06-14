@@ -34,7 +34,7 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
           <h1 className="text-xl font-bold uppercase tracking-wider text-slate-900 mb-1">
             {personalIdentity.fullName || 'YOUR NAME'}
           </h1>
-          <h2 className="text-[10px] font-semibold uppercase tracking-widest text-primary">
+          <h2 className="text-[10px] font-semibold uppercase tracking-widest text-primary print:brightness-75">
             {personalIdentity.professionalTitle || 'Professional Title'}
           </h2>
         </div>
@@ -47,38 +47,38 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
           <ul className="space-y-4 text-xs">
             {personalIdentity.email && (
               <li className="flex flex-col">
-                <span className="text-slate-400 uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Mail size={12}/> Email</span>
+                <span className="text-slate-500 font-medium uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Mail size={12}/> Email</span>
                 <span className="break-all">{personalIdentity.email}</span>
               </li>
             )}
             {personalIdentity.phone && (
               <li className="flex flex-col">
-                <span className="text-slate-400 uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Phone size={12}/> Phone</span>
+                <span className="text-slate-500 font-medium uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Phone size={12}/> Phone</span>
                 <span>{personalIdentity.phone}</span>
               </li>
             )}
             {personalIdentity.location && (
               <li className="flex flex-col">
-                <span className="text-slate-400 uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><MapPin size={12}/> Location</span>
+                <span className="text-slate-500 font-medium uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><MapPin size={12}/> Location</span>
                 <span>{personalIdentity.location}</span>
               </li>
             )}
             {socialLinks.website && (
               <li className="flex flex-col">
-                <span className="text-slate-400 uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Globe size={12}/> Website</span>
-                <span className="break-all">{socialLinks.website.replace('https://', '')}</span>
+                <span className="text-slate-500 font-medium uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Globe size={12}/> Website</span>
+                <span className="break-all">{socialLinks.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span>
               </li>
             )}
             {socialLinks.linkedin && (
               <li className="flex flex-col">
-                <span className="text-slate-400 uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Link size={12}/> LinkedIn</span>
-                <span className="break-all">{socialLinks.linkedin.replace('https://', '')}</span>
+                <span className="text-slate-500 font-medium uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Link size={12}/> LinkedIn</span>
+                <span className="break-all">{socialLinks.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span>
               </li>
             )}
             {socialLinks.github && (
               <li className="flex flex-col">
-                <span className="text-slate-400 uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Link size={12}/> GitHub</span>
-                <span className="break-all">{socialLinks.github.replace('https://', '')}</span>
+                <span className="text-slate-500 font-medium uppercase text-[9px] tracking-wider mb-1 flex items-center gap-1"><Link size={12}/> GitHub</span>
+                <span className="break-all">{socialLinks.github.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span>
               </li>
             )}
           </ul>
@@ -99,7 +99,7 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
                   </div>
                   <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
                     <div 
-                      className="bg-primary h-full rounded-full" 
+                      className="bg-primary print:brightness-75 h-full rounded-full" 
                       style={{ width: `${skill.level}%` }}
                     />
                   </div>
@@ -116,8 +116,8 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
         {personalIdentity.professionalSummary && (
           <section className="mb-10 print:break-inside-avoid">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-primary">
+              <div className="w-2 h-2 rounded-full bg-primary print:brightness-75" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-primary print:brightness-75">
                 Executive_Summary
               </h3>
             </div>
@@ -131,8 +131,8 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
         {experience.length > 0 && (
           <section className="mb-10">
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-primary">
+              <div className="w-2 h-2 rounded-full bg-primary print:brightness-75" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-primary print:brightness-75">
                 Professional_Timeline
               </h3>
             </div>
@@ -147,7 +147,7 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
                       {exp.startDate} &ndash; {exp.current ? 'Present' : exp.endDate}
                     </span>
                   </div>
-                  <h5 className="text-[11px] text-primary font-semibold mb-2">{exp.company}</h5>
+                  <h5 className="text-[11px] text-primary print:brightness-75 font-semibold mb-2">{exp.company}</h5>
                   <p className="text-[11px] leading-relaxed text-slate-600 whitespace-pre-wrap text-justify">
                     {exp.description}
                   </p>
@@ -161,8 +161,8 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
         {education.length > 0 && (
           <section className="mb-10">
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-primary">
+              <div className="w-2 h-2 rounded-full bg-primary print:brightness-75" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-primary print:brightness-75">
                 Academic_History
               </h3>
             </div>
@@ -188,8 +188,8 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
         {(certificates.length > 0 || courses.length > 0 || licenses.length > 0) && (
           <section className="mb-10">
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-primary">
+              <div className="w-2 h-2 rounded-full bg-primary print:brightness-75" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-primary print:brightness-75">
                 Licenses_&_Certifications
               </h3>
             </div>
@@ -233,8 +233,8 @@ export const ModernTemplate = forwardRef<HTMLDivElement, TemplateProps>(({ data,
         {references.length > 0 && (
           <section>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-primary">
+              <div className="w-2 h-2 rounded-full bg-primary print:brightness-75" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-primary print:brightness-75">
                 References
               </h3>
             </div>
