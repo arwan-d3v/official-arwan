@@ -34,6 +34,9 @@ Sesuai peta arsitektur `mega_platform_architecture_map.png`, yang belum diimplem
 
 ## 📋 Changelog (Pembaruan Terkini)
 
+- `[NEW]` `src/app/services/page.tsx` (Bento-grid Services Module)
+- `[UPDATED]` `src/app/[username]/page.tsx` (Mock UI Data specifically for Owner)
+- `[NEW]` `mockData.ts` (Static records for CV/Portfolio simulation)
 - `[NEW]` `src/app/dashboard/academy/layout.tsx` & `page.tsx`
 - `[NEW]` `src/components/academy/VideoPlayer.tsx`
 - `[NEW]` `src/components/academy/AICodeCompanion.tsx`

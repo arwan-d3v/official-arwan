@@ -6,6 +6,8 @@ import { ExternalLink, Folder, Code2, Star, Activity, GitBranch } from 'lucide-r
 import { getGitHubStats } from '@/lib/github';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
 import LiveCVViewer from '@/components/cv-builder/LiveCVViewer';
+import { mockArwanData } from '../../../mockData';
+import { Briefcase, Award, Zap } from 'lucide-react';
 
 const GithubIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => {
   const { size = 24, ...rest } = props;
@@ -48,22 +50,39 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
     notFound();
   }
 
-  // Query user published projects
-  const { data: userProjects } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('user_id', userProfile.id)
-    .eq('is_published', true);
+  // Default variables
+  let userProjects: any[] | null = null;
+  let githubStats: any = { reposCount: 0, stars: 0, linesOfCode: 0, uptime: '99.9%' };
+  let cvDoc: any = null;
 
-  // Fetch GitHub Stats
-  const githubStats = await getGitHubStats(username);
+  // Mock UI specific logic for 'arwan'
+  const isMockArwan = username.toLowerCase() === 'arwan';
 
-  // Fetch CV Document
-  const { data: cvDoc } = await supabase
-    .from('cv_documents')
-    .select('data, template_type')
-    .eq('user_id', userProfile.id)
-    .single();
+  if (!isMockArwan) {
+    // Query user published projects only for non-mock users
+    const { data: fetchedProjects } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('user_id', userProfile.id)
+      .eq('is_published', true);
+
+    userProjects = fetchedProjects;
+
+    // Fetch GitHub Stats
+    githubStats = await getGitHubStats(username);
+
+    // Fetch CV Document
+    const { data: fetchedCvDoc } = await supabase
+      .from('cv_documents')
+      .select('data, template_type')
+      .eq('user_id', userProfile.id)
+      .single();
+
+    cvDoc = fetchedCvDoc;
+  } else {
+    // For arwan mock, populate dummy stats
+    githubStats = { reposCount: 142, stars: 840, linesOfCode: 420000, uptime: '99.99%' };
+  }
 
   const activeTheme = userProfile.active_theme || 'minimalist';
 
@@ -133,12 +152,99 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
           </div>
         </section>
 
-        {/* Portfolio Content: Projects */}
-        <section className="flex flex-col gap-8">
-          <div className="flex items-center gap-3">
-            <Folder className="text-primary" size={28} />
-            <h2 className="text-2xl font-bold">Published Projects</h2>
-          </div>
+        {isMockArwan && (
+          <>
+            {/* IT Experience Section */}
+            <section className="flex flex-col gap-8">
+              <div className="flex items-center gap-3">
+                <Briefcase className="text-primary" size={28} />
+                <h2 className="text-2xl font-bold">IT Experience</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockArwanData.itExperiences.map((exp) => (
+                  <Card key={exp.id} className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md">
+                    <CardHeader>
+                      <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">{exp.role}</CardTitle>
+                      <CardDescription className="text-foreground/80 font-semibold">{exp.company}</CardDescription>
+                      <div className="text-xs text-foreground/50 mt-1">{exp.duration}</div>
+                    </CardHeader>
+                    <CardContent className="text-sm text-foreground/70">
+                      {exp.description}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            {/* Freelance Experience Section */}
+            <section className="flex flex-col gap-8">
+              <div className="flex items-center gap-3">
+                <Zap className="text-primary" size={28} />
+                <h2 className="text-2xl font-bold">Freelance Projects</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockArwanData.freelanceExperiences.map((exp) => (
+                  <Card key={exp.id} className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md">
+                    <CardHeader>
+                      <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">{exp.project}</CardTitle>
+                      <CardDescription className="text-foreground/80 font-semibold">{exp.client}</CardDescription>
+                      <div className="text-xs text-foreground/50 mt-1">{exp.duration}</div>
+                    </CardHeader>
+                    <CardContent className="text-sm text-foreground/70">
+                      {exp.description}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            {/* Skills & Certificates Section */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-3">
+                  <Code2 className="text-primary" size={28} />
+                  <h2 className="text-2xl font-bold">Technical Skills</h2>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {mockArwanData.skills.map((skill, index) => (
+                    <span key={index} className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-3">
+                  <Award className="text-primary" size={28} />
+                  <h2 className="text-2xl font-bold">Certifications</h2>
+                </div>
+                <div className="space-y-4">
+                  {mockArwanData.certificates.map((cert) => (
+                    <div key={cert.id} className="p-4 bg-secondary/10 border border-secondary/20 rounded-xl flex justify-between items-center hover:border-primary/40 transition-colors">
+                      <div>
+                        <div className="font-bold text-foreground/90">{cert.name}</div>
+                        <div className="text-sm text-foreground/60">{cert.issuer}</div>
+                      </div>
+                      <div className="text-xs px-2 py-1 bg-secondary/30 rounded text-foreground/80 font-mono">
+                        {cert.year}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+
+        {!isMockArwan && (
+          <>
+            {/* Portfolio Content: Projects */}
+            <section className="flex flex-col gap-8">
+              <div className="flex items-center gap-3">
+                <Folder className="text-primary" size={28} />
+                <h2 className="text-2xl font-bold">Published Projects</h2>
+              </div>
 
           {userProjects && userProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -205,6 +311,8 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
               </div>
             </div>
           </section>
+        )}
+          </>
         )}
 
         {/* Footer info branding */}
