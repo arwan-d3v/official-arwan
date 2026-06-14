@@ -68,7 +68,7 @@ export default function CommandPalette() {
 
         <div className="max-h-[60vh] overflow-y-auto p-2 custom-scrollbar">
           {filteredCommands.length === 0 ? (
-            <div className="py-8 text-center text-slate-500">No results found for "{search}"</div>
+            <div className="py-8 text-center text-slate-500">No results found for &quot;{search}&quot;</div>
           ) : (
             <div className="space-y-1">
               {filteredCommands.map((cmd) => (

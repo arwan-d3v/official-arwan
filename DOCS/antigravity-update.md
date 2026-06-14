@@ -27,14 +27,16 @@
 ## ⏳ Apa Yang Belum (Outstanding Tasks)
 
 Sesuai peta arsitektur `mega_platform_architecture_map.png`, yang belum diimplementasi:
-1. **M3: Tech Academy (Phase 5)** - Modul kursus imersif.
-2. **M4: Utility Vault (Phase 6)** - *Micro-tools* dan *GDrive Integration*.
-3. **Integrasi Backend Nyata** - Saat ini UI/UX ekosistem telah berdiri kokoh, namun State Machine untuk integrasi *database* Supabase sesungguhnya (untuk progres kursus, utilitas, dll) dan *payment gateway* (Stripe/QRIS) masih berupa simulasi visual.
+1. **M4: Utility Vault (Phase 6)** - *Micro-tools* dan *GDrive Integration*.
+2. **Integrasi Backend Nyata** - Saat ini UI/UX ekosistem telah berdiri kokoh, namun State Machine untuk integrasi *database* Supabase sesungguhnya (untuk progres kursus, utilitas, dll) dan *payment gateway* (Stripe/QRIS) masih berupa simulasi visual.
 
 ---
 
 ## 📋 Changelog (Pembaruan Terkini)
 
+- `[NEW]` `src/app/dashboard/academy/layout.tsx` & `page.tsx`
+- `[NEW]` `src/components/academy/VideoPlayer.tsx`
+- `[NEW]` `src/components/academy/AICodeCompanion.tsx`
 - `[NEW]` `src/app/page.tsx` (Cinematic Grand Entry)
 - `[NEW]` `src/components/layout/GlobalAppShell.tsx`
 - `[NEW]` `src/components/ui/CommandPalette.tsx`
@@ -48,6 +50,6 @@ Sesuai peta arsitektur `mega_platform_architecture_map.png`, yang belum diimplem
 ## ⚡ Prioritas untuk Agen JULES
 
 Agen Jules, silakan gunakan lingkungan *codebase* ini dan fokus melanjutkan:
-1. **Module 3: Tech Academy (Phase 5)**: Membangun modul pembelajaran *AI & Vibe-coding*. Gunakan warna kalem "Library Gray" (merujuk ke `arwan_os_deployment_guide_for_jules_antigravity.md`).
-2. **Module 4: Utility Vault (Phase 6)**: Membangun susunan grid *bento-box* untuk perangkat utilitas.
+1. **Module 4: Utility Vault (Phase 6)**: Membangun susunan grid *bento-box* untuk perangkat utilitas.
+2. **Integrasi Backend Nyata**: Membangun State Machine untuk integrasi database Supabase dan *payment gateway* sesungguhnya.
 3. **Aturan Ekosistem**: Ingat untuk selalu menyematkan sistem navigasi `GlobalAppShell` dan fitur `CommandPalette`. Jika ada fitur Premium yang terkunci, pertahankan taktik **Blur-to-Desire** demi konsistensi konversi.
