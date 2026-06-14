@@ -1,214 +1,113 @@
 import React from 'react';
-import { createClient } from '@/lib/supabase/server';
-import { notFound } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { ExternalLink, Folder, Code2, Star, Activity, GitBranch } from 'lucide-react';
-import { getGitHubStats } from '@/lib/github';
+import Link from 'next/link';
+import { ArrowRight, User, Briefcase, Rocket, Terminal } from 'lucide-react';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
-import LiveCVViewer from '@/components/cv-builder/LiveCVViewer';
-import MegaMenu from '@/components/ui/MegaMenu';
 
-const GithubIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => {
-  const { size = 24, ...rest } = props;
+export default function GrandEntryPage() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      stroke="currentColor"
-      strokeWidth="2"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...rest}
-    >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
-  );
-};
-
-export default async function ArwanPortfolioRootPage() {
-  const username = 'arwan'; // Hardcoded for root
-  const supabase = await createClient();
-
-  // Query user profile
-  const { data: userProfile, error: userError } = await supabase
-    .from('users')
-    .select('*')
-    .eq('username', username)
-    .single();
-
-  if (userError || !userProfile) {
-    // If 'arwan' user is not found in the DB yet, gracefully degrade
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center flex-col gap-4">
-        <h1 className="text-4xl font-bold">Admin Profile Not Found</h1>
-        <p className="text-muted-foreground">Please create an account with username 'arwan' to populate the root portfolio.</p>
-        <a href="/platform" className="text-primary underline">Go to SaaS Platform</a>
-      </div>
-    );
-  }
-
-  // Query user published projects
-  const { data: userProjects } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('user_id', userProfile.id)
-    .eq('is_published', true);
-
-  // Fetch GitHub Stats
-  const githubStats = await getGitHubStats(username);
-
-  // Fetch CV Document
-  const { data: cvDoc } = await supabase
-    .from('cv_documents')
-    .select('data, template_type')
-    .eq('user_id', userProfile.id)
-    .single();
-
-  const activeTheme = userProfile.active_theme || 'minimalist';
-
-  return (
-    <div 
-      data-theme={activeTheme} 
-      className="min-h-screen bg-background text-foreground transition-colors duration-500"
-    >
-      <MegaMenu />
+    <div className="min-h-screen bg-[#0D0F14] text-slate-200 flex flex-col font-sans selection:bg-primary/30">
       
-      <div className="py-16 px-4 md:px-8 max-w-5xl mx-auto flex flex-col gap-16 mt-8">
-        {/* Header / Profile Section */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-secondary/20 pb-8">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/30 text-xs font-semibold uppercase tracking-wider mb-4 border border-secondary/40">
-              System Architect
+      {/* Cinematic Hero Section */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-24">
+        
+        {/* Subtle glowing orb in background */}
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50 text-sm font-medium text-slate-300 backdrop-blur-sm shadow-sm">
+            <Terminal size={16} className="text-indigo-400" />
+            <span>Arwan Personal OS v2.0</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white">
+            The Digital <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Ecosystem</span>
+          </h1>
+          
+          <div className="text-lg md:text-xl text-slate-400 font-mono h-12 flex items-center justify-center">
+            <TypewriterEffect text="Architecting high-density SaaS environments and enterprise systems." speed={30} delay={300} />
+          </div>
+        </div>
+
+        {/* 3 Gates / Portals */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl relative z-10">
+          
+          {/* Gate 1: Portfolio */}
+          <Link href="/arwan" className="group relative bg-slate-900/60 border border-slate-800 rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden backdrop-blur-md flex flex-col items-start h-full shadow-lg">
+            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+              <User size={120} />
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-2 uppercase">
-              {userProfile.full_name || username}
-            </h1>
-            <p className="text-lg text-foreground/70 font-mono">
-              <TypewriterEffect text={`Welcome to my professional workspace & portfolio.`} speed={40} delay={500} />
+            <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl mb-6 ring-1 ring-indigo-500/20 group-hover:ring-indigo-500/50 transition-all">
+              <User size={28} />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">My Portfolio</h2>
+            <p className="text-slate-400 leading-relaxed mb-8 flex-1">
+              Explore my verified credentials, open-source repositories, and interactive case studies.
             </p>
-          </div>
+            <div className="flex items-center text-indigo-400 font-semibold group-hover:gap-3 gap-2 transition-all mt-auto">
+              <span>View Profile</span>
+              <ArrowRight size={18} />
+            </div>
+          </Link>
 
-          <div className="flex items-center gap-3">
-            <span className="px-3.5 py-1.5 rounded-full bg-primary/20 text-primary border border-primary/30 text-sm font-bold uppercase tracking-wide shadow-sm">
-              Creator & Owner
-            </span>
-          </div>
-        </header>
+          {/* Gate 2: Services */}
+          <Link href="/services" className="group relative bg-slate-900/60 border border-slate-800 rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden backdrop-blur-md flex flex-col items-start h-full shadow-lg">
+            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+              <Briefcase size={120} />
+            </div>
+            <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl mb-6 ring-1 ring-emerald-500/20 group-hover:ring-emerald-500/50 transition-all">
+              <Briefcase size={28} />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">My Services</h2>
+            <p className="text-slate-400 leading-relaxed mb-8 flex-1">
+              Hire me for enterprise software architecture, full-stack consulting, and high-frequency UI/UX design.
+            </p>
+            <div className="flex items-center text-emerald-400 font-semibold group-hover:gap-3 gap-2 transition-all mt-auto">
+              <span>Hire Me</span>
+              <ArrowRight size={18} />
+            </div>
+          </Link>
 
-        {/* GitHub Stats Widget */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
-            <div className="p-3 bg-primary/10 text-primary rounded-lg"><GitBranch size={20} /></div>
-            <div>
-              <div className="text-2xl font-bold">{githubStats.reposCount}</div>
-              <div className="text-xs text-foreground/60 uppercase tracking-wider">Repositories</div>
+          {/* Gate 3: SaaS Hub */}
+          <Link href="/platform" className="group relative bg-slate-900/60 border border-slate-800 rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden backdrop-blur-md flex flex-col items-start h-full shadow-lg">
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/5 to-fuchsia-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+              <Rocket size={120} />
             </div>
-          </div>
-          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
-            <div className="p-3 bg-primary/10 text-primary rounded-lg"><Star size={20} /></div>
-            <div>
-              <div className="text-2xl font-bold">{githubStats.stars}</div>
-              <div className="text-xs text-foreground/60 uppercase tracking-wider">Total Stars</div>
+            <div className="p-3 bg-violet-500/10 text-violet-400 rounded-xl mb-6 ring-1 ring-violet-500/20 group-hover:ring-violet-500/50 transition-all">
+              <Rocket size={28} />
             </div>
-          </div>
-          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
-            <div className="p-3 bg-primary/10 text-primary rounded-lg"><Code2 size={20} /></div>
-            <div>
-              <div className="text-2xl font-bold">{(githubStats.linesOfCode / 1000).toFixed(1)}k</div>
-              <div className="text-xs text-foreground/60 uppercase tracking-wider">Lines of Code</div>
+            <h2 className="text-2xl font-bold text-white mb-3">Premium SaaS Hub</h2>
+            <p className="text-slate-400 leading-relaxed mb-8 flex-1">
+              Access the Obsidian Nexus ecosystem. CV Builders, Quant Trading Dashboards, and the Tech Academy.
+            </p>
+            <div className="flex items-center text-violet-400 font-semibold group-hover:gap-3 gap-2 transition-all mt-auto">
+              <span>Enter Platform</span>
+              <ArrowRight size={18} />
             </div>
-          </div>
-          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
-            <div className="p-3 bg-primary/10 text-primary rounded-lg"><Activity size={20} /></div>
-            <div>
-              <div className="text-2xl font-bold text-emerald-500">{githubStats.uptime}</div>
-              <div className="text-xs text-foreground/60 uppercase tracking-wider">System Uptime</div>
-            </div>
-          </div>
-        </section>
+          </Link>
 
-        {/* Portfolio Content: Projects */}
-        <section className="flex flex-col gap-8">
-          <div className="flex items-center gap-3">
-            <Folder className="text-primary" size={28} />
-            <h2 className="text-2xl font-bold">Published Projects</h2>
+        </div>
+      </main>
+
+      {/* Signature Arwan Footer - Marketing Variant */}
+      <footer className="w-full py-10 border-t border-slate-800/50 bg-[#0D0F14]/80 backdrop-blur-md mt-auto">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col items-center gap-6">
+          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-sm text-slate-500 font-medium">
+            <Link href="/arwan" className="hover:text-slate-300 transition-colors">My Portfolio</Link>
+            <Link href="/services" className="hover:text-slate-300 transition-colors">Agency Services</Link>
+            <Link href="/platform" className="hover:text-slate-300 transition-colors">SaaS Hub</Link>
+            <Link href="/dashboard" className="hover:text-slate-300 transition-colors">User Dashboard</Link>
+            <Link href="/god-mode" className="hover:text-yellow-500 transition-colors flex items-center gap-1">
+              <Terminal size={14} /> Owner Login
+            </Link>
           </div>
-
-          {userProjects && userProjects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {userProjects.map((project) => (
-                <Card 
-                  key={project.id} 
-                  className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md"
-                >
-                  <CardHeader>
-                    <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                      {project.title}
-                    </CardTitle>
-                    <CardDescription className="text-foreground/60 mt-1 line-clamp-3">
-                      {project.description || "No description provided."}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex justify-end gap-3 border-t border-secondary/10 pt-4 mt-auto">
-                    {project.github_url && (
-                      <a 
-                        href={project.github_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-secondary/20 hover:bg-primary/20 text-foreground hover:text-primary transition-colors"
-                        title="GitHub Repository"
-                      >
-                        <GithubIcon size={18} />
-                      </a>
-                    )}
-                    {project.live_url && (
-                      <a 
-                        href={project.live_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-secondary/20 hover:bg-primary/20 text-foreground hover:text-primary transition-colors"
-                        title="Live Demo"
-                      >
-                        <ExternalLink size={18} />
-                      </a>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 border-2 border-dashed border-secondary/20 rounded-2xl bg-secondary/5">
-              <p className="text-foreground/50 font-medium text-lg">No projects published yet.</p>
-            </div>
-          )}
-        </section>
-
-        {/* Live Resume / CV Document */}
-        {cvDoc && cvDoc.data && (
-          <section className="flex flex-col gap-8">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-primary/10 text-primary rounded-lg"><Code2 size={24} /></div>
-              <h2 className="text-2xl font-bold">Live Professional Resume</h2>
-            </div>
-            
-            <div className="bg-secondary/5 border border-secondary/20 p-4 md:p-12 rounded-3xl overflow-x-auto flex justify-center custom-scrollbar shadow-inner">
-              <div className="origin-top transform scale-75 md:scale-100 shadow-2xl transition-transform">
-                <LiveCVViewer data={cvDoc.data} templateType={cvDoc.template_type} isVip={true} />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Footer info branding */}
-        <footer className="mt-12 text-center text-xs text-foreground/40 border-t border-secondary/20 pt-8">
-          <p>System architected by <span className="font-semibold text-primary">Arwan</span> &copy; 2026</p>
-          <a href="/platform" className="text-primary hover:underline mt-2 inline-block">Visit the SaaS Platform</a>
-        </footer>
-
-      </div>
+          <div className="w-16 h-px bg-slate-800 rounded-full" />
+          <div className="text-center">
+            <p className="text-slate-700 text-xs font-bold tracking-[0.2em] uppercase mb-2">Arwan Personal OS</p>
+            <p className="text-slate-500 text-sm">Engineered & Copyrighted by <span className="text-slate-300 font-semibold">Arwan</span> &copy; {new Date().getFullYear()}</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

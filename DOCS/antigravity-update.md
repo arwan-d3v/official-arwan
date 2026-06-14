@@ -1,35 +1,53 @@
-# Antigravity System Update - CV Builder & Portfolio Ecosystem
+# Antigravity System Update - Mega-Platform Ecosystem
 
-**Status**: Completed Phase 1 (Arsitektur CV & Theming)
+**Status**: Completed Phase 1, Phase 3 (Global Shell), and Phase 4 (Quant Enterprise)
 **Last Updated**: 2026-06-14 (Antigravity Agent)
 
 ## 🎯 Pencapaian Utama (Actual Work Done)
 
-1. **CV Builder Core Engine**
-   - **Form Modul Accordion**: Telah dibangun form input *stateful* menggunakan `zustand` yang mencakup 01_PERSONAL_IDENTITY, 02_WORK_EXPERIENCE, 03_EDUCATION, 04_CORE_MATRIX_SKILLS, dan 05_ADDITIONAL_MODULES (Sertifikat, Kursus, Lisensi, Referensi, Social Links).
-   - **Image Cropper Terintegrasi**: Menggunakan `react-easy-crop` untuk unggah foto (max 2MB), potong rasio 1:1, dan *downscaling* instan (max 300px) menggunakan *Canvas* untuk meminimalisir ukuran `JSONB` di Supabase. Termasuk opsi bentuk *Round/Square* dan garis tepi (*Outline On/Off*).
-   - **Split-Pane & PDF Pagination**: Layout sebelah kiri untuk Editor dan kanan untuk *Preview*. Pada *Live Preview*, disematkan utilitas CSS `print:break-inside-avoid` untuk memaksa elemen lompat ke halaman baru secara utuh saat dokumen A4 penuh.
-   - **Enterprise State & Toast**: Seluruh sistem validasi dan proses simpan (ke tabel `cv_documents`) menggunakan notifikasi *Toast* yang melayang estetik di atas layar (*Success, Warning, Error*), menghilangkan penggunaan *alert()* bawaan *browser*.
+1. **Global App Shell & Navigation (Phase 3)**
+   - **Grand Entry Landing Page**: `src/app/page.tsx` dirombak menjadi portal sinematik 3-gerbang (Portfolio, Services, SaaS Hub).
+   - **Unified Sidebar**: Dibuat `GlobalAppShell` untuk navigasi sentral antar modul (M1-M4) dan God Mode.
+   - **Command Palette (`Ctrl+K`)**: Fitur teleportasi kilat antar modul (dibangun di `CommandPalette.tsx`).
+   - **Unified Identity Hub**: Halaman `/dashboard/profile` dengan *Matrix* langganan dan taktik *Blur-to-Desire* untuk *upsell*.
+   - **God Mode Command Center**: Dibangun di `/god-mode`, berisi matriks pendapatan global dan tombol kontrol sistem (*force pause*, *sync APIs*, *maintenance mode*).
 
-2. **Global Theming Integration (29 Tema)**
-   - **Form Editor UI**: Seluruh blok komponen kiri (CV Constructor) dan *Modal Cropper* sudah sepenuhnya dirajut menggunakan CSS token standar Tailwind (`bg-background`, `bg-card`, `text-primary`). Saat tema UI diubah dari *ThemeSelector*, seluruh warna form ikut berubah adaptif.
-   - **Template CV Theming**: *ModernTemplate* (sisi *Preview*) yang tadinya *hardcode* warna *cyan*, kini menggunakan token `text-primary` dan `bg-primary`. Ini menghasilkan cetakan CV yang aksen warnanya selalu senada dengan tema VIP yang sedang digunakan pengguna.
-   - **Watermark System**: Pengguna non-VIP secara otomatis akan mendapatkan sisipan *watermark* halus "Made with official-arwan.info" yang hanya terlihat saat di-ekspor ke PDF (disembunyikan saat mode layar).
+2. **Module 2: Quant Enterprise (Phase 4)**
+   - **Dark Terminal Architecture**: Desain murni hitam (`#000000`) dengan aksen *cyber green/crimson* khas institusi keuangan.
+   - **Algorithm Fleet**: Panel manajemen bot trading tiruan.
+   - **Terminal Chart**: Mock-up candlestick CSS yang dinamis.
+   - **Live Order Feed**: Interval React mensimulasikan arus *order* berkecepatan tinggi dengan mikro-animasi kedip (flash).
+   - **Monetization (Live API Manager)**: Kunci *Blur-to-Desire* untuk *API keys*, secara psikologis mendorong pengguna ke level *Pro Tier*.
 
-3. **Routing Arsitektur & Public Portfolio**
-   - **`/[username]/page.tsx`**: Dibangun sebagai Public Portfolio VIP. Halaman ini melacak *username*, mengambil `cv_documents` terbaru milik mereka, lalu merender Live CV (melalui `LiveCVViewer`) bersama dengan metrik GitHub dan daftar Proyek Terpublikasi mereka.
-   - **`src/app/page.tsx` (Root Domain Override)**: Rute utama situs kini dicegat (*override*) untuk memanggil profil dengan `username = 'arwan'`. Alamat utama domain Anda murni menampilkan profil eksklusif Anda.
-   - **`/platform`**: Halaman SaaS *Landing Page* yang lama telah dipindahkan secara permanen ke `src/app/platform/page.tsx`.
+3. **CV Builder Core Engine (Phase 1 - Sebelumnya Selesai)**
+   - Form modul stateful, *Image Cropper*, Split-Pane PDF pagination, Theming, dsb.
 
 ---
 
-## 🎨 Analisa Celah UI/UX & Penyelesaian Akhir
+## ⏳ Apa Yang Belum (Outstanding Tasks)
 
-*Update: Karena kendala sinkronisasi environment cabang git dengan Agen Jules, seluruh poin celah UX mikro di bawah ini telah diselesaikan (diambil alih) langsung oleh Antigravity pada 2026-06-14.*
+Sesuai peta arsitektur `mega_platform_architecture_map.png`, yang belum diimplementasi:
+1. **M3: Tech Academy (Phase 5)** - Modul kursus imersif.
+2. **M4: Utility Vault (Phase 6)** - *Micro-tools* dan *GDrive Integration*.
+3. **Integrasi Backend Nyata** - Saat ini UI/UX ekosistem telah berdiri kokoh, namun State Machine untuk integrasi *database* Supabase sesungguhnya (untuk progres kursus, utilitas, dll) dan *payment gateway* (Stripe/QRIS) masih berupa simulasi visual.
 
-1. ~~**Kontras Teks pada Preview A4 (ModernTemplate)**~~ -> **(SOLVED)**: Warna teks kontak telah diubah ke `text-slate-500 font-medium`.
-2. ~~**Kesesuaian Warna Primary di Kertas Terang**~~ -> **(SOLVED)**: Aksen warna primary di CV kini ditambah instruksi `print:brightness-75` sehingga secara otomatis warnanya meredup/menggelap 25% khusus di dalam mode ekspor PDF agar selalu terbaca di kertas A4 putih.
-3. ~~**Animasi Smooth Render saat Pindah Template**~~ -> **(SOLVED)**: Pustaka `framer-motion` telah ditambahkan di dalam `LiveCVViewer.tsx` untuk menganimasikan transisi *fade-in* yang halus saat memindah antara tipe template `ATS_OPTIMIZED` dan `MODERN_MINIMAL`.
-4. ~~**Validasi Formulir Mikro (UX Form)**~~ -> **(SOLVED)**: Mengimplementasikan RegEx `.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')` untuk membersihkan URL sosial media menjadi seragam (contoh: `linkedin.com/in/arwan`).
+---
 
-Pembangunan Core Engine CV Builder, Public Portfolio, Global Theming, beserta sentuhan UI/UX mikro telah **Selesai Total (100%)**.
+## 📋 Changelog (Pembaruan Terkini)
+
+- `[NEW]` `src/app/page.tsx` (Cinematic Grand Entry)
+- `[NEW]` `src/components/layout/GlobalAppShell.tsx`
+- `[NEW]` `src/components/ui/CommandPalette.tsx`
+- `[NEW]` `src/app/dashboard/profile/page.tsx`
+- `[NEW]` `src/app/god-mode/page.tsx` & `layout.tsx`
+- `[NEW]` `src/app/dashboard/quant/page.tsx` & `layout.tsx`
+- `[NEW]` `src/components/quant/AlgorithmFleet.tsx`, `TerminalChart.tsx`, `OrderFeed.tsx`, `LiveApiManager.tsx`
+
+---
+
+## ⚡ Prioritas untuk Agen JULES
+
+Agen Jules, silakan gunakan lingkungan *codebase* ini dan fokus melanjutkan:
+1. **Module 3: Tech Academy (Phase 5)**: Membangun modul pembelajaran *AI & Vibe-coding*. Gunakan warna kalem "Library Gray" (merujuk ke `arwan_os_deployment_guide_for_jules_antigravity.md`).
+2. **Module 4: Utility Vault (Phase 6)**: Membangun susunan grid *bento-box* untuk perangkat utilitas.
+3. **Aturan Ekosistem**: Ingat untuk selalu menyematkan sistem navigasi `GlobalAppShell` dan fitur `CommandPalette`. Jika ada fitur Premium yang terkunci, pertahankan taktik **Blur-to-Desire** demi konsistensi konversi.
