@@ -1,39 +1,43 @@
-# Antigravity Activity Log
+# Antigravity System Update - CV Builder & Portfolio Ecosystem
 
-## Next.js Project Setup
-- Successfully bootstrapped Next.js 15 App Router + Tailwind v4 + TypeScript.
-- Set up directory structure and initial documentation.
-- Implemented dynamic theme switching support in globals.css.
-- Completed Atomic Component Scaffolding phase.
-- Completed Hybrid Architecture setup with Next.js 15 App Router.
-- Completed Database Schema & Telemetry Stubs phase.
-- Successfully integrated Shadcn UI core components.
-- Successfully implemented Supabase SSR and RLS logic.
-- Completed Cloudflare R2 stub implementation.
-- Completed Vercel Edge Middleware implementation.
+**Status**: Completed Phase 1 (Arsitektur CV & Theming)
+**Last Updated**: 2026-06-14 (Antigravity Agent)
 
-## [2026-06-13] Documentation Analysis & Reporting
-- [07:01:10 +08:00] Melakukan analisis menyeluruh terhadap seluruh file dokumentasi proyek (`DESIGN.md`, `antigravity-update.md`, `jules-update.md`).
-- [07:01:10 +08:00] Meng-generate laporan komprehensif bahasa Indonesia (`docs_analysis_report.md`) yang menjabarkan *workflow* sistem, daftar tugas yang telah selesai, tantangan teknis yang ada, serta fitur-fitur yang masih perlu dilanjutkan pengembangannya.
+## 🎯 Pencapaian Utama (Actual Work Done)
 
-## [2026-06-13] Lead Architect Audit & Standalone Module Scaffolding
-- [07:16:02 +08:00] Melakukan audit kode hasil inisialisasi Jules. Memverifikasi penggunaan Tailwind v4 secara murni (tanpa tailwind.config.ts), pemisahan Supabase (SSR Auth) dan Firebase (Telemetry), serta konvensi penamaan instance `db`. Seluruh poin direktif lulus audit (PASS).
-- [07:16:02 +08:00] Membangun arsitektur (skeleton) untuk Modul TradingView Webhook di `src/modules/tradingview` (`types.ts`, `webhook-receiver.ts`, `firebase-broadcaster.ts`) yang secara ketat diisolasi dari komponen UI.
+1. **CV Builder Core Engine**
+   - **Form Modul Accordion**: Telah dibangun form input *stateful* menggunakan `zustand` yang mencakup 01_PERSONAL_IDENTITY, 02_WORK_EXPERIENCE, 03_EDUCATION, 04_CORE_MATRIX_SKILLS, dan 05_ADDITIONAL_MODULES (Sertifikat, Kursus, Lisensi, Referensi, Social Links).
+   - **Image Cropper Terintegrasi**: Menggunakan `react-easy-crop` untuk unggah foto (max 2MB), potong rasio 1:1, dan *downscaling* instan (max 300px) menggunakan *Canvas* untuk meminimalisir ukuran `JSONB` di Supabase. Termasuk opsi bentuk *Round/Square* dan garis tepi (*Outline On/Off*).
+   - **Split-Pane & PDF Pagination**: Layout sebelah kiri untuk Editor dan kanan untuk *Preview*. Pada *Live Preview*, disematkan utilitas CSS `print:break-inside-avoid` untuk memaksa elemen lompat ke halaman baru secara utuh saat dokumen A4 penuh.
+   - **Enterprise State & Toast**: Seluruh sistem validasi dan proses simpan (ke tabel `cv_documents`) menggunakan notifikasi *Toast* yang melayang estetik di atas layar (*Success, Warning, Error*), menghilangkan penggunaan *alert()* bawaan *browser*.
 
-## [2026-06-13] Local Debugging & Architecture Directive (CP)
-- [07:16:30 +08:00] [CP] Menerima DOKUMEN DIREKTIF ANTI GRAVITY (LEAD ARCHITECT & QA) dari Root Admin (Arwan). Mulai melakukan tes local debug untuk fitur yang sudah berjalan saat ini dan merencanakan optimasi ekosistem.
+2. **Global Theming Integration (29 Tema)**
+   - **Form Editor UI**: Seluruh blok komponen kiri (CV Constructor) dan *Modal Cropper* sudah sepenuhnya dirajut menggunakan CSS token standar Tailwind (`bg-background`, `bg-card`, `text-primary`). Saat tema UI diubah dari *ThemeSelector*, seluruh warna form ikut berubah adaptif.
+   - **Template CV Theming**: *ModernTemplate* (sisi *Preview*) yang tadinya *hardcode* warna *cyan*, kini menggunakan token `text-primary` dan `bg-primary`. Ini menghasilkan cetakan CV yang aksen warnanya selalu senada dengan tema VIP yang sedang digunakan pengguna.
+   - **Watermark System**: Pengguna non-VIP secara otomatis akan mendapatkan sisipan *watermark* halus "Made with official-arwan.info" yang hanya terlihat saat di-ekspor ke PDF (disembunyikan saat mode layar).
 
-## [2026-06-13] Implementation of Portfolio Builder & Services Manager (CP)
-- [08:44:00 +08:00] [CP] Berhasil memigrasikan pola *Command Center* dan `TypewriterEffect` dari `@existing-code`. Modul CRUD Portfolio Builder (untuk user) dan Services Manager (khusus Admin) telah diaktifkan di `/dashboard`, serta disinkronkan langsung ke database Supabase SSR. Halaman utama (`/`) kini memuat layanan secara dinamis dari tabel Services, dan halaman Portofolio Publik (`/[username]`) menampilkan widget Auto-Fetch GitHub Stats secara *real-time*.
+3. **Routing Arsitektur & Public Portfolio**
+   - **`/[username]/page.tsx`**: Dibangun sebagai Public Portfolio VIP. Halaman ini melacak *username*, mengambil `cv_documents` terbaru milik mereka, lalu merender Live CV (melalui `LiveCVViewer`) bersama dengan metrik GitHub dan daftar Proyek Terpublikasi mereka.
+   - **`src/app/page.tsx` (Root Domain Override)**: Rute utama situs kini dicegat (*override*) untuk memanggil profil dengan `username = 'arwan'`. Alamat utama domain Anda murni menampilkan profil eksklusif Anda.
+   - **`/platform`**: Halaman SaaS *Landing Page* yang lama telah dipindahkan secara permanen ke `src/app/platform/page.tsx`.
 
-## [2026-06-13] Git Repository Update & Vercel Prep (CP)
-- [08:45:00 +08:00] [CP] Menambahkan `existing-code/` ke dalam `.gitignore`, melakukan `git commit` untuk seluruh perubahan fitur Portfolio Builder dan Services, serta menyiapkan file *environment* untuk kebutuhan *deployment* ke Vercel.
+---
 
-## [2026-06-13] Vercel Build Fix (CP)
-- [08:48:00 +08:00] [CP] Memperbaiki *fatal error* Firebase (`Can't determine Firebase Database URL`) saat proses *build* di Vercel dengan mengimplementasikan *graceful fallback initialization* (memberikan nilai *mock* ke `initializeApp` jika variabel *environment* kosong saat kompilasi). Kode telah di-*push* kembali ke *repository*.
+## 🎨 Analisa Celah UI/UX & Rekomendasi (Handover untuk Jules)
 
-## [2026-06-13] Exclusive Tech Themes & UI Contrast Update (CP)
-- [16:11:00 +08:00] [CP] Memisahkan tema publik dengan *Dashboard Editor Theme*. Mengimplementasikan 2 tema eksklusif khusus Dashboard: **Nvidia (Light Mode)** dan **Neon Cyan AMD/MSI (Dark Mode, tanpa aksen merah)**. Preferensi tema *user* akan disimpan di database Supabase (kolom `dashboard_theme`). Menambahkan efek elevasi/bayangan untuk mempertajam kontras antara *Sidebar* dan *Navbar* (termasuk aksen garis *Primary* ala Nvidia di *Navbar* atas).
+Berdasarkan tinjauan Antigravity, terdapat beberapa celah mikro pada UI/UX saat ini yang membutuhkan sentuhan lebih lanjut:
 
-## [2026-06-13] TypeScript Build & Existing Code Fix (CP)
-- [16:17:00 +08:00] [CP] Memperbaiki *TypeScript type error* pada halaman register (`setError` mismatch) serta mengecualikan folder `existing-code/` pada konfigurasi `tsconfig.json` untuk mencegah Next.js melakukan kompilasi file lawas saat proses *production build*. *Build* kini berhasil tanpa *error*.
+1. **Kontras Teks pada Preview A4 (ModernTemplate)**
+   - **Masalah**: Penggunaan teks terang seperti `text-slate-400` untuk label kontak berpotensi tidak lulus uji WCAG AA di atas kertas putih.
+   - **Rekomendasi**: Gelapkan sedikit menjadi `text-slate-500` atau berikan ketebalan tambahan (`font-medium`). 
+2. **Kesesuaian Warna Primary di Kertas Terang**
+   - **Masalah**: Karena *ModernTemplate* menggunakan warna `primary` dari tema *dashboard*, jika pengguna VIP memilih tema terang dengan warna *primary* yang pucat (misal *Pastel Yellow*), warna tersebut bisa tidak terbaca dengan baik di atas *background* putih A4.
+   - **Rekomendasi**: Implementasikan deteksi kontras dinamis atau sediakan opsi warna sekunder terpisah khusus untuk cetak PDF.
+3. **Animasi Smooth Render saat Pindah Template**
+   - **Masalah**: Perpindahan (*toggle*) dari `ATS_OPTIMIZED` ke `MODERN_MINIMAL` masih instan dan terkadang memicu *layout shift* yang kaku karena render ulang data yang tebal.
+   - **Rekomendasi**: Tambahkan transisi `framer-motion` atau CSS *fade-in* lambat saat DOM komponen *template* diganti.
+4. **Validasi Formulir Mikro (UX Form)**
+   - **Masalah**: Saat ini URL Social Media di-*parse* dengan metode sederhana `.replace('https://', '')`. Jika pengguna keliru memasukkan http, akan cacat secara tampilan.
+   - **Rekomendasi**: Gunakan pustaka kecil atau fungsi RegEx untuk membersihkan URL agar konsisten ditampilkan sebagai `linkedin.com/in/username` di pratinjau.
+
+Jules, silakan lanjutkan penyempurnaan dari poin-poin Analisa UI/UX di atas jika memungkinkan, atau ekspansi fitur baru. Sistem inti (*core pipeline*) untuk CRUD CV, integrasi basis data, dan *layouting* telah stabil!

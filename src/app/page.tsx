@@ -1,96 +1,214 @@
-import MegaMenu from '@/components/ui/MegaMenu';
-import KiroiXTelemetry from '@/components/ui/KiroiXTelemetry';
-import ThemeSelector from '@/components/ui/ThemeSelector';
-import GlobalFooter from '@/components/ui/GlobalFooter';
+import React from 'react';
 import { createClient } from '@/lib/supabase/server';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { ExternalLink, Folder, Code2, Star, Activity, GitBranch } from 'lucide-react';
+import { getGitHubStats } from '@/lib/github';
+import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
+import LiveCVViewer from '@/components/cv-builder/LiveCVViewer';
+import MegaMenu from '@/components/ui/MegaMenu';
 
-export default async function Home() {
+const GithubIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => {
+  const { size = 24, ...rest } = props;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      stroke="currentColor"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+      <path d="M9 18c-4.51 2-5-2-7-2" />
+    </svg>
+  );
+};
+
+export default async function ArwanPortfolioRootPage() {
+  const username = 'arwan'; // Hardcoded for root
   const supabase = await createClient();
-  const { data: services } = await supabase
-    .from('services')
+
+  // Query user profile
+  const { data: userProfile, error: userError } = await supabase
+    .from('users')
     .select('*')
-    .eq('is_active', true)
-    .order('price_monthly', { ascending: true });
+    .eq('username', username)
+    .single();
+
+  if (userError || !userProfile) {
+    // If 'arwan' user is not found in the DB yet, gracefully degrade
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center flex-col gap-4">
+        <h1 className="text-4xl font-bold">Admin Profile Not Found</h1>
+        <p className="text-muted-foreground">Please create an account with username 'arwan' to populate the root portfolio.</p>
+        <a href="/platform" className="text-primary underline">Go to SaaS Platform</a>
+      </div>
+    );
+  }
+
+  // Query user published projects
+  const { data: userProjects } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('user_id', userProfile.id)
+    .eq('is_published', true);
+
+  // Fetch GitHub Stats
+  const githubStats = await getGitHubStats(username);
+
+  // Fetch CV Document
+  const { data: cvDoc } = await supabase
+    .from('cv_documents')
+    .select('data, template_type')
+    .eq('user_id', userProfile.id)
+    .single();
+
+  const activeTheme = userProfile.active_theme || 'minimalist';
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-500">
+    <div 
+      data-theme={activeTheme} 
+      className="min-h-screen bg-background text-foreground transition-colors duration-500"
+    >
       <MegaMenu />
+      
+      <div className="py-16 px-4 md:px-8 max-w-5xl mx-auto flex flex-col gap-16 mt-8">
+        {/* Header / Profile Section */}
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-secondary/20 pb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/30 text-xs font-semibold uppercase tracking-wider mb-4 border border-secondary/40">
+              System Architect
+            </div>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-2 uppercase">
+              {userProfile.full_name || username}
+            </h1>
+            <p className="text-lg text-foreground/70 font-mono">
+              <TypewriterEffect text={`Welcome to my professional workspace & portfolio.`} speed={40} delay={500} />
+            </p>
+          </div>
 
-      <main className="flex-grow flex flex-col gap-24 py-16">
-        {/* Hero Section */}
-        <section className="px-4 text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-balance">
-            Centralized <span className="text-primary">Ecosystem</span> SaaS
-          </h1>
-          <p className="text-lg md:text-xl text-foreground/70 mb-10 max-w-2xl mx-auto">
-            Live Portfolio & High-Performance Trading Infrastructure. Architected for speed, reliability, and unparalleled design.
-          </p>
-          <div className="flex justify-center gap-4">
-            <Link href="#services" className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">
-              Explore Services
-            </Link>
-            <Link href="/dashboard" className="px-8 py-3 rounded-full bg-secondary text-foreground font-bold hover:bg-secondary/80 transition-colors">
-              Go to Dashboard
-            </Link>
+          <div className="flex items-center gap-3">
+            <span className="px-3.5 py-1.5 rounded-full bg-primary/20 text-primary border border-primary/30 text-sm font-bold uppercase tracking-wide shadow-sm">
+              Creator & Owner
+            </span>
+          </div>
+        </header>
+
+        {/* GitHub Stats Widget */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+            <div className="p-3 bg-primary/10 text-primary rounded-lg"><GitBranch size={20} /></div>
+            <div>
+              <div className="text-2xl font-bold">{githubStats.reposCount}</div>
+              <div className="text-xs text-foreground/60 uppercase tracking-wider">Repositories</div>
+            </div>
+          </div>
+          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+            <div className="p-3 bg-primary/10 text-primary rounded-lg"><Star size={20} /></div>
+            <div>
+              <div className="text-2xl font-bold">{githubStats.stars}</div>
+              <div className="text-xs text-foreground/60 uppercase tracking-wider">Total Stars</div>
+            </div>
+          </div>
+          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+            <div className="p-3 bg-primary/10 text-primary rounded-lg"><Code2 size={20} /></div>
+            <div>
+              <div className="text-2xl font-bold">{(githubStats.linesOfCode / 1000).toFixed(1)}k</div>
+              <div className="text-xs text-foreground/60 uppercase tracking-wider">Lines of Code</div>
+            </div>
+          </div>
+          <div className="bg-secondary/10 border border-secondary/20 p-4 rounded-xl flex items-center gap-4 hover:border-primary/50 transition-colors">
+            <div className="p-3 bg-primary/10 text-primary rounded-lg"><Activity size={20} /></div>
+            <div>
+              <div className="text-2xl font-bold text-emerald-500">{githubStats.uptime}</div>
+              <div className="text-xs text-foreground/60 uppercase tracking-wider">System Uptime</div>
+            </div>
           </div>
         </section>
 
-        {/* Dynamic Services Grid */}
-        <section id="services" className="px-4 max-w-7xl mx-auto w-full scroll-mt-24">
-          <h2 className="text-3xl font-bold mb-8 text-center">Active Services</h2>
-          {services && services.length > 0 ? (
+        {/* Portfolio Content: Projects */}
+        <section className="flex flex-col gap-8">
+          <div className="flex items-center gap-3">
+            <Folder className="text-primary" size={28} />
+            <h2 className="text-2xl font-bold">Published Projects</h2>
+          </div>
+
+          {userProjects && userProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((service) => (
-                <div key={service.id} className="rounded-2xl bg-secondary/10 border border-secondary/20 p-8 hover:border-primary/50 transition-colors flex flex-col">
-                  <h3 className="text-2xl font-bold mb-2">{service.name}</h3>
-                  <div className="text-3xl font-extrabold text-primary mb-4">
-                    ${service.price_monthly}<span className="text-sm text-foreground/50 font-normal">/mo</span>
-                  </div>
-                  <p className="text-foreground/70 mb-8 flex-grow">{service.description}</p>
-                  <button className="w-full py-3 rounded-xl bg-primary/20 text-primary font-bold hover:bg-primary hover:text-primary-foreground transition-colors">
-                    Subscribe Now
-                  </button>
-                </div>
+              {userProjects.map((project) => (
+                <Card 
+                  key={project.id} 
+                  className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                      {project.title}
+                    </CardTitle>
+                    <CardDescription className="text-foreground/60 mt-1 line-clamp-3">
+                      {project.description || "No description provided."}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex justify-end gap-3 border-t border-secondary/10 pt-4 mt-auto">
+                    {project.github_url && (
+                      <a 
+                        href={project.github_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg bg-secondary/20 hover:bg-primary/20 text-foreground hover:text-primary transition-colors"
+                        title="GitHub Repository"
+                      >
+                        <GithubIcon size={18} />
+                      </a>
+                    )}
+                    {project.live_url && (
+                      <a 
+                        href={project.live_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg bg-secondary/20 hover:bg-primary/20 text-foreground hover:text-primary transition-colors"
+                        title="Live Demo"
+                      >
+                        <ExternalLink size={18} />
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 border border-dashed border-secondary/30 rounded-2xl bg-secondary/5">
-              <p className="text-foreground/50">No active services available at the moment.</p>
+            <div className="text-center py-16 border-2 border-dashed border-secondary/20 rounded-2xl bg-secondary/5">
+              <p className="text-foreground/50 font-medium text-lg">No projects published yet.</p>
             </div>
           )}
         </section>
 
-        {/* KiroiX Telemetry Widget */}
-        <section className="px-4 w-full">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2">Live MT5 Integration</h2>
-            <p className="text-foreground/60">Real-time telemetry from KiroiX EA nodes.</p>
-          </div>
-          <KiroiXTelemetry />
-        </section>
-
-        {/* Pricing Funnel Mockup */}
-        <section className="px-4 max-w-5xl mx-auto w-full text-center">
-            <div className="bg-gradient-to-r from-primary/20 via-background to-primary/20 p-[1px] rounded-3xl">
-              <div className="bg-background rounded-[23px] py-16 px-8 border border-primary/20">
-                <h2 className="text-4xl font-bold mb-4">Unlock the Full Potential</h2>
-                <p className="text-foreground/70 mb-8 max-w-xl mx-auto">Access 25+ premium VIP themes, dedicated SaaS instances, and low-latency KiroiX routing.</p>
-                <button className="px-10 py-4 rounded-full bg-primary text-primary-foreground font-bold text-lg hover:shadow-[0_0_30px_rgba(var(--primary),0.4)] transition-all duration-300">
-                  Upgrade to VIP
-                </button>
+        {/* Live Resume / CV Document */}
+        {cvDoc && cvDoc.data && (
+          <section className="flex flex-col gap-8">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-primary/10 text-primary rounded-lg"><Code2 size={24} /></div>
+              <h2 className="text-2xl font-bold">Live Professional Resume</h2>
+            </div>
+            
+            <div className="bg-secondary/5 border border-secondary/20 p-4 md:p-12 rounded-3xl overflow-x-auto flex justify-center custom-scrollbar shadow-inner">
+              <div className="origin-top transform scale-75 md:scale-100 shadow-2xl transition-transform">
+                <LiveCVViewer data={cvDoc.data} templateType={cvDoc.template_type} isVip={true} />
               </div>
             </div>
-        </section>
+          </section>
+        )}
 
-        {/* Theme Selector */}
-        <section className="px-4 w-full">
-          <ThemeSelector />
-        </section>
+        {/* Footer info branding */}
+        <footer className="mt-12 text-center text-xs text-foreground/40 border-t border-secondary/20 pt-8">
+          <p>System architected by <span className="font-semibold text-primary">Arwan</span> &copy; 2026</p>
+          <a href="/platform" className="text-primary hover:underline mt-2 inline-block">Visit the SaaS Platform</a>
+        </footer>
 
-      </main>
-
-      <GlobalFooter />
+      </div>
     </div>
   );
 }

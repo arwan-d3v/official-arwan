@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { ExternalLink, Folder, Code2, Star, Activity, GitBranch } from 'lucide-react';
 import { getGitHubStats } from '@/lib/github';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
+import LiveCVViewer from '@/components/cv-builder/LiveCVViewer';
 
 const GithubIcon = (props: React.SVGProps<SVGSVGElement> & { size?: number }) => {
   const { size = 24, ...rest } = props;
@@ -56,6 +57,13 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
 
   // Fetch GitHub Stats
   const githubStats = await getGitHubStats(username);
+
+  // Fetch CV Document
+  const { data: cvDoc } = await supabase
+    .from('cv_documents')
+    .select('data, template_type')
+    .eq('user_id', userProfile.id)
+    .single();
 
   const activeTheme = userProfile.active_theme || 'minimalist';
 
@@ -181,6 +189,23 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
             </div>
           )}
         </section>
+
+        {/* Live Resume / CV Document */}
+        {cvDoc && cvDoc.data && (
+          <section className="flex flex-col gap-8">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-primary/10 text-primary rounded-lg"><Code2 size={24} /></div>
+              <h2 className="text-2xl font-bold">Live Professional Resume</h2>
+            </div>
+            
+            <div className="bg-secondary/5 border border-secondary/20 p-4 md:p-12 rounded-3xl overflow-x-auto flex justify-center custom-scrollbar shadow-inner">
+              {/* Scale down the A4 wrapper on small screens if necessary, but tailwind handles the canvas */}
+              <div className="origin-top transform scale-75 md:scale-100 shadow-2xl transition-transform">
+                <LiveCVViewer data={cvDoc.data} templateType={cvDoc.template_type} isVip={userProfile.is_vip} />
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Footer info branding */}
         <footer className="mt-12 text-center text-xs text-foreground/40 border-t border-secondary/20 pt-8">

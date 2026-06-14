@@ -217,3 +217,37 @@ USING (
     AND (om.role = 'owner' OR om.role = 'admin')
   )
 );
+
+-- Create CV Type Enum
+CREATE TYPE cv_template AS ENUM ('ATS_OPTIMIZED', 'MODERN_MINIMAL');
+
+-- Create CV Documents Table
+CREATE TABLE cv_documents (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL DEFAULT 'Untitled CV',
+  data JSONB NOT NULL DEFAULT '{}'::jsonb,
+  template_type cv_template DEFAULT 'ATS_OPTIMIZED',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Enable RLS
+ALTER TABLE cv_documents ENABLE ROW LEVEL SECURITY;
+
+-- CV Documents Policies
+CREATE POLICY "Users can view own CVs"
+ON cv_documents FOR SELECT
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own CVs"
+ON cv_documents FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own CVs"
+ON cv_documents FOR UPDATE
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own CVs"
+ON cv_documents FOR DELETE
+USING (auth.uid() = user_id);
