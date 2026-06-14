@@ -168,8 +168,35 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
                       <CardDescription className="text-foreground/80 font-semibold">{exp.company}</CardDescription>
                       <div className="text-xs text-foreground/50 mt-1">{exp.duration}</div>
                     </CardHeader>
-                    <CardContent className="text-sm text-foreground/70">
-                      {exp.description}
+                    <CardContent className="text-sm text-foreground/70 flex flex-col gap-4">
+                      <p>{exp.description}</p>
+
+                      {/* Media Embeds */}
+                      {exp.media && (
+                        <div className="flex flex-col gap-2 mt-auto pt-4 border-t border-secondary/20">
+                          {exp.media.video && (
+                            <div className="w-full rounded-lg overflow-hidden border border-secondary/30 relative bg-black aspect-video flex items-center justify-center group/video cursor-pointer">
+                              <video src={exp.media.video} className="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 transition-opacity" preload="metadata" />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-full bg-primary/80 flex items-center justify-center backdrop-blur-sm shadow-lg text-primary-foreground transform group-hover/video:scale-110 transition-transform">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {exp.media.images && exp.media.images.length > 0 && (
+                            <div className={`grid gap-2 ${exp.media.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                              {exp.media.images.map((img, idx) => (
+                                <div key={idx} className="w-full h-24 rounded-lg overflow-hidden border border-secondary/30 bg-secondary/10 relative group/img">
+                                  {/* Next.js Image component normally preferred, using standard img for mock generic urls */}
+                                  <img src={img} alt="Project Media" className="w-full h-full object-cover opacity-80 group-hover/img:opacity-100 group-hover/img:scale-110 transition-all duration-500" loading="lazy" />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
@@ -184,14 +211,40 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mockArwanData.freelanceExperiences.map((exp) => (
-                  <Card key={exp.id} className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md">
+                  <Card key={exp.id} className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md flex flex-col h-full">
                     <CardHeader>
                       <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">{exp.project}</CardTitle>
                       <CardDescription className="text-foreground/80 font-semibold">{exp.client}</CardDescription>
                       <div className="text-xs text-foreground/50 mt-1">{exp.duration}</div>
                     </CardHeader>
-                    <CardContent className="text-sm text-foreground/70">
-                      {exp.description}
+                    <CardContent className="text-sm text-foreground/70 flex flex-col gap-4 flex-1">
+                      <p>{exp.description}</p>
+
+                      {/* Media Embeds */}
+                      {exp.media && (
+                        <div className="flex flex-col gap-2 mt-auto pt-4 border-t border-secondary/20">
+                          {exp.media.video && (
+                            <div className="w-full rounded-lg overflow-hidden border border-secondary/30 relative bg-black aspect-video flex items-center justify-center group/video cursor-pointer">
+                              <video src={exp.media.video} className="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 transition-opacity" preload="metadata" />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-full bg-primary/80 flex items-center justify-center backdrop-blur-sm shadow-lg text-primary-foreground transform group-hover/video:scale-110 transition-transform">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {exp.media.images && exp.media.images.length > 0 && (
+                            <div className={`grid gap-2 ${exp.media.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                              {exp.media.images.map((img, idx) => (
+                                <div key={idx} className="w-full h-24 rounded-lg overflow-hidden border border-secondary/30 bg-secondary/10 relative group/img">
+                                  <img src={img} alt="Project Media" className="w-full h-full object-cover opacity-80 group-hover/img:opacity-100 group-hover/img:scale-110 transition-all duration-500" loading="lazy" />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
