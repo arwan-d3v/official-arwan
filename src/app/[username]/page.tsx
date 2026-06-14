@@ -6,6 +6,7 @@ import { ExternalLink, Folder, Code2, Star, Activity, GitBranch } from 'lucide-r
 import { getGitHubStats } from '@/lib/github';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
 import LiveCVViewer from '@/components/cv-builder/LiveCVViewer';
+import { CVData } from '@/components/cv-builder/types';
 import { mockArwanData } from '../../../mockData';
 import { Briefcase, Award, Zap } from 'lucide-react';
 
@@ -33,6 +34,26 @@ interface UserPortfolioPageProps {
   params: Promise<{ username: string }>;
 }
 
+interface Project {
+  id: string;
+  title: string;
+  description: string | null;
+  github_url: string | null;
+  live_url: string | null;
+}
+
+interface GitHubStats {
+  reposCount: number;
+  stars: number;
+  linesOfCode: number;
+  uptime: string;
+}
+
+interface CvDoc {
+  data: CVData;
+  template_type: string;
+}
+
 export default async function UserPortfolioPage({ params }: UserPortfolioPageProps) {
   const resolvedParams = await params;
   const { username } = resolvedParams;
@@ -51,9 +72,9 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
   }
 
   // Default variables
-  let userProjects: any[] | null = null;
-  let githubStats: any = { reposCount: 0, stars: 0, linesOfCode: 0, uptime: '99.9%' };
-  let cvDoc: any = null;
+  let userProjects: Project[] | null = null;
+  let githubStats: GitHubStats = { reposCount: 0, stars: 0, linesOfCode: 0, uptime: '99.9%' };
+  let cvDoc: CvDoc | null = null;
 
   // Mock UI specific logic for 'arwan'
   const isMockArwan = username.toLowerCase() === 'arwan';
@@ -78,7 +99,12 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
       .eq('user_id', userProfile.id)
       .single();
 
-    cvDoc = fetchedCvDoc;
+    if (fetchedCvDoc) {
+      cvDoc = {
+        data: fetchedCvDoc.data as unknown as CVData,
+        template_type: fetchedCvDoc.template_type
+      };
+    }
   } else {
     // For arwan mock, populate dummy stats
     githubStats = { reposCount: 142, stars: 840, linesOfCode: 420000, uptime: '99.99%' };
