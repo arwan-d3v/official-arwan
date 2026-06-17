@@ -6,7 +6,7 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-[#0D0F14] text-slate-200 font-sans selection:bg-emerald-500/30">
       {/* Navigation Bar */}
-      <header className="h-20 flex items-center px-6 md:px-12 border-b border-slate-800/50 bg-[#0D0F14]/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="h-20 flex items-center px-6 md:px-12 border-b border-slate-800/50 glass-liquid sticky top-0 z-50">
         <div className="w-full max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
             <ArrowLeft size={20} />
@@ -40,7 +40,7 @@ export default function ServicesPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
           {/* Tier 1: UI/UX & Frontend */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-3xl p-8 hover:border-slate-600 transition-colors flex flex-col relative overflow-hidden group">
+          <div className="glass-extreme rounded-3xl p-8 hover:border-slate-600 transition-colors flex flex-col relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
               <Smartphone size={120} />
             </div>
@@ -62,13 +62,13 @@ export default function ServicesPage() {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl transition-all border border-slate-700">
+            <button className="w-full py-3 px-4 clay-btn">
               Request Quote
             </button>
           </div>
 
           {/* Tier 2: Full-Stack SaaS (Featured) */}
-          <div className="bg-gradient-to-b from-slate-800 to-slate-900/80 border border-emerald-500/30 rounded-3xl p-8 relative overflow-hidden shadow-[0_0_40px_rgba(52,211,153,0.1)] group transform md:-translate-y-4 flex flex-col">
+          <div className="glass-extreme border-emerald-500/50 rounded-3xl p-8 relative overflow-hidden shadow-[0_0_40px_rgba(52,211,153,0.1)] group transform md:-translate-y-4 flex flex-col">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-cyan-400" />
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
               <Code2 size={120} />
@@ -95,13 +95,13 @@ export default function ServicesPage() {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(52,211,153,0.3)]">
+            <button className="w-full py-3 px-4 clay-btn-primary">
               Start Project
             </button>
           </div>
 
           {/* Tier 3: Enterprise Architecture */}
-          <div className="bg-slate-900/40 border border-slate-800 rounded-3xl p-8 hover:border-slate-600 transition-colors flex flex-col relative overflow-hidden group">
+          <div className="glass-extreme rounded-3xl p-8 hover:border-slate-600 transition-colors flex flex-col relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
               <Server size={120} />
             </div>
@@ -123,7 +123,7 @@ export default function ServicesPage() {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl transition-all border border-slate-700">
+            <button className="w-full py-3 px-4 clay-btn">
               Contact Sales
             </button>
           </div>

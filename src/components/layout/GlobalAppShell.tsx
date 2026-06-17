@@ -98,7 +98,7 @@ export default function GlobalAppShell({ children }: GlobalAppShellProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Top Navbar */}
-        <header className="h-16 flex items-center justify-between px-6 border-b border-slate-800/60 bg-[#0D0F14]/80 backdrop-blur-md shrink-0 z-10">
+        <header className="h-16 flex items-center justify-between px-6 border-b border-slate-800/60 glass-liquid shrink-0 z-10">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}

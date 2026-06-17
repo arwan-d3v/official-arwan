@@ -100,3 +100,85 @@ body {
     @apply border-[var(--border)];
   }
 }
+
+/* =========================================================================
+   EXTREME GLASSMORPHISM & CLAYMORPHISM UI UTILITIES
+   ========================================================================= */
+
+@layer utilities {
+  /* 1. Extremely Frosted Glass */
+  .glass-extreme {
+    @apply bg-black/30 backdrop-blur-3xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  }
+
+  /* 2. Liquid Glass (Navbar specific) */
+  .glass-liquid {
+    @apply bg-black/10 backdrop-blur-[60px] backdrop-saturate-150 border-b border-white/5;
+  }
+
+  /* 3. Claymorphism Button Base */
+  .clay-btn {
+    @apply bg-slate-800 text-slate-100 rounded-2xl transition-all duration-300 relative overflow-hidden;
+    box-shadow:
+      8px 8px 16px rgba(0, 0, 0, 0.4),
+      -8px -8px 16px rgba(255, 255, 255, 0.05),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.1),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .clay-btn:hover {
+    @apply transform -translate-y-1 bg-slate-700;
+    box-shadow:
+      12px 12px 20px rgba(0, 0, 0, 0.5),
+      -10px -10px 20px rgba(255, 255, 255, 0.05),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.15),
+      inset -3px -3px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .clay-btn:active {
+    @apply transform translate-y-1;
+    box-shadow:
+      inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Primary Accent Clay Button */
+  .clay-btn-primary {
+    @apply bg-primary text-primary-foreground;
+    box-shadow:
+      8px 8px 16px rgba(0, 0, 0, 0.3),
+      -8px -8px 16px rgba(255, 255, 255, 0.1),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .clay-btn-primary:hover {
+    @apply brightness-110 -translate-y-1;
+  }
+
+  .clay-btn-primary:active {
+    @apply transform translate-y-1;
+    box-shadow:
+      inset 6px 6px 10px rgba(0, 0, 0, 0.4),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.1);
+  }
+
+  /* 4. Claymorphism Toggle (Switch) */
+  .clay-toggle {
+    @apply relative inline-flex items-center rounded-full bg-slate-800 transition-colors duration-300;
+    box-shadow:
+      inset 4px 4px 8px rgba(0,0,0,0.4),
+      inset -4px -4px 8px rgba(255,255,255,0.05);
+  }
+  .clay-toggle[data-state="checked"] {
+    @apply bg-primary;
+  }
+  .clay-toggle-thumb {
+    @apply inline-block rounded-full bg-slate-200 transition-transform duration-300;
+    box-shadow:
+      2px 2px 5px rgba(0,0,0,0.3),
+      -2px -2px 5px rgba(255,255,255,0.5),
+      inset 1px 1px 2px rgba(255,255,255,0.8),
+      inset -1px -1px 2px rgba(0,0,0,0.1);
+  }
+}

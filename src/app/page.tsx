@@ -32,7 +32,7 @@ export default function GrandEntryPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl relative z-10">
           
           {/* Gate 1: Portfolio */}
-          <Link href="/arwan" className="group relative bg-slate-900/60 border border-slate-800 rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden backdrop-blur-md flex flex-col items-start h-full shadow-lg">
+          <Link href="/arwan" className="group relative glass-extreme rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden  flex flex-col items-start h-full shadow-lg">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
               <User size={120} />
             </div>
@@ -50,7 +50,7 @@ export default function GrandEntryPage() {
           </Link>
 
           {/* Gate 2: Services */}
-          <Link href="/services" className="group relative bg-slate-900/60 border border-slate-800 rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden backdrop-blur-md flex flex-col items-start h-full shadow-lg">
+          <Link href="/services" className="group relative glass-extreme rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden  flex flex-col items-start h-full shadow-lg">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
               <Briefcase size={120} />
             </div>
@@ -68,7 +68,7 @@ export default function GrandEntryPage() {
           </Link>
 
           {/* Gate 3: SaaS Hub */}
-          <Link href="/platform" className="group relative bg-slate-900/60 border border-slate-800 rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden backdrop-blur-md flex flex-col items-start h-full shadow-lg">
+          <Link href="/platform" className="group relative glass-extreme rounded-3xl p-8 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-500 overflow-hidden  flex flex-col items-start h-full shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-br from-violet-600/5 to-fuchsia-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
               <Rocket size={120} />
@@ -90,7 +90,7 @@ export default function GrandEntryPage() {
       </main>
 
       {/* Signature Arwan Footer - Marketing Variant */}
-      <footer className="w-full py-10 border-t border-slate-800/50 bg-[#0D0F14]/80 backdrop-blur-md mt-auto">
+      <footer className="w-full py-10 border-t border-slate-800/50 bg-[#0D0F14]/80  mt-auto">
         <div className="max-w-6xl mx-auto px-4 flex flex-col items-center gap-6">
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-sm text-slate-500 font-medium">
             <Link href="/arwan" className="hover:text-slate-300 transition-colors">My Portfolio</Link>

@@ -130,7 +130,7 @@ export default function PortfolioBuilderPage() {
             </div>
             
             <div className="pt-4 flex gap-2">
-              <button type="submit" className="flex-1 bg-primary/20 text-primary border border-primary hover:bg-primary hover:text-primary-foreground font-bold py-2 rounded transition-colors flex items-center justify-center gap-2">
+              <button type="submit" className="flex-1 clay-btn-primary flex items-center justify-center gap-2">
                 <Save size={18} /> {editingId ? "UPDATE" : "SAVE"}
               </button>
               {editingId && (
