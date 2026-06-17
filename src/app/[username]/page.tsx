@@ -162,7 +162,7 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mockArwanData.itExperiences.map((exp) => (
-                  <Card key={exp.id} className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md">
+                  <Card key={exp.id} className="glass-extreme hover:border-primary/40 transition-all duration-300 group shadow-md">
                     <CardHeader>
                       <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">{exp.role}</CardTitle>
                       <CardDescription className="text-foreground/80 font-semibold">{exp.company}</CardDescription>
@@ -211,7 +211,7 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mockArwanData.freelanceExperiences.map((exp) => (
-                  <Card key={exp.id} className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md flex flex-col h-full">
+                  <Card key={exp.id} className="glass-extreme hover:border-primary/40 transition-all duration-300 group shadow-md flex flex-col h-full">
                     <CardHeader>
                       <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">{exp.project}</CardTitle>
                       <CardDescription className="text-foreground/80 font-semibold">{exp.client}</CardDescription>
@@ -274,7 +274,7 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
                 </div>
                 <div className="space-y-4">
                   {mockArwanData.certificates.map((cert) => (
-                    <div key={cert.id} className="p-4 bg-secondary/10 border border-secondary/20 rounded-xl flex justify-between items-center hover:border-primary/40 transition-colors">
+                    <div key={cert.id} className="p-4 glass-extreme rounded-xl flex justify-between items-center hover:border-primary/40 transition-colors">
                       <div>
                         <div className="font-bold text-foreground/90">{cert.name}</div>
                         <div className="text-sm text-foreground/60">{cert.issuer}</div>
@@ -304,7 +304,7 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
               {userProjects.map((project) => (
                 <Card 
                   key={project.id} 
-                  className="bg-secondary/10 border-secondary/20 hover:border-primary/40 transition-all duration-300 group shadow-md"
+                  className="glass-extreme hover:border-primary/40 transition-all duration-300 group shadow-md"
                 >
                   <CardHeader>
                     <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
@@ -357,7 +357,7 @@ export default async function UserPortfolioPage({ params }: UserPortfolioPagePro
               <h2 className="text-2xl font-bold">Live Professional Resume</h2>
             </div>
             
-            <div className="bg-secondary/5 border border-secondary/20 p-4 md:p-12 rounded-3xl overflow-x-auto flex justify-center custom-scrollbar shadow-inner">
+            <div className="glass-extreme p-4 md:p-12 rounded-3xl overflow-x-auto flex justify-center custom-scrollbar shadow-inner">
               {/* Scale down the A4 wrapper on small screens if necessary, but tailwind handles the canvas */}
               <div className="origin-top transform scale-75 md:scale-100 shadow-2xl transition-transform">
                 <LiveCVViewer data={cvDoc.data} templateType={cvDoc.template_type} isVip={userProfile.is_vip} />
